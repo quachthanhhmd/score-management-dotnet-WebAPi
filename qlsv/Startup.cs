@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Microsoft.OpenApi.Models;
 
 namespace qlsv
 {
@@ -40,7 +40,12 @@ namespace qlsv
             services.AddDbContext<ApplicationDbContext>(options =>
                                                      options.UseMySql(connectionString, new MySqlServerVersion(new Version(10, 1, 40)), options => options.EnableRetryOnFailure()));
 
-            services.AddControllersWithViews();
+            services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger QLSV Solution", Version = "v1" });
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+            });
 
         }
 
@@ -65,9 +70,19 @@ namespace qlsv
 
             app.UseAuthorization();
 
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger qlsv V1");
+                c.RoutePrefix = string.Empty;
+            });
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
