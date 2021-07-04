@@ -14,6 +14,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using Microsoft.OpenApi.Models;
+using qlsv.Models.Interfaces;
+using qlsv.Models.Services;
+using qlsv.Models;
+using Microsoft.AspNetCore.Identity;
+using qlsv.Data.Models;
 
 namespace qlsv
 {
@@ -34,13 +39,21 @@ namespace qlsv
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-   
+            
 
             var connectionString = _configuration.GetConnectionString("Default");
             services.AddDbContext<ApplicationDbContext>(options =>
                                                      options.UseMySql(connectionString, new MySqlServerVersion(new Version(10, 1, 40)), options => options.EnableRetryOnFailure()));
 
+            services.AddIdentity<Users, AppRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            //services.AddTransient<SignInManager<Users>, SignInManager<Users>>();
+            services.AddTransient<UserManager<Users>, UserManager<Users>>();
+            services.AddTransient<IUserPublicService, UserPublicService>();
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger QLSV Solution", Version = "v1" });

@@ -5,10 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using qlsv.Data.Models;
 
 namespace qlsv.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<Users, AppRole, Guid>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -24,6 +26,7 @@ namespace qlsv.Data
             modelBuilder.Entity<Class>().ToTable("Class");
             modelBuilder.Entity<Departments>().ToTable("Departments");
             modelBuilder.Entity<Marks>().ToTable("Marks");
+            modelBuilder.Entity<AppRole>().ToTable("AppRole");
 
             // Configure Primary Users  
             modelBuilder.Entity<Users>().HasKey(ug => ug.Id).HasName("PK_StudentId");
@@ -41,17 +44,12 @@ namespace qlsv.Data
             modelBuilder.Entity<Class>().HasIndex(u =>  u.RoomId);
 
             // Configure columns  
-            modelBuilder.Entity<Users>().Property(ug => ug.Id).HasColumnType("nvarchar(10)")
-                                                                        .HasMaxLength(10)
-                                                                        .IsRequired();
-            modelBuilder.Entity<Users>().Property(ug => ug.Name).HasColumnType("nvarchar(100)").HasMaxLength(10).IsRequired();
-            modelBuilder.Entity<Users>().Property(ug => ug.Password).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
+            modelBuilder.Entity<Users>().Property(ug => ug.StudentId).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
+            modelBuilder.Entity<Users>().Property(ug => ug.Name).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
             modelBuilder.Entity<Users>().Property(ug => ug.Age).HasColumnType("int").IsRequired();
             modelBuilder.Entity<Users>().Property(ug => ug.Address).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
-            modelBuilder.Entity<Users>().Property(ug => ug.Email).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired(true);
-            modelBuilder.Entity<Users>().Property(ug => ug.PhoneNumber).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
             modelBuilder.Entity<Users>().Property(ug => ug.Gender).HasColumnType("int").IsRequired(true);
-            modelBuilder.Entity<Users>().Property(ug => ug.Dob).HasColumnType("DATETIME").IsRequired(true);
+            modelBuilder.Entity<Users>().Property(ug => ug.Dob).HasColumnType("DATE").IsRequired(true);
             modelBuilder.Entity<Users>().Property(ug => ug.Role).HasColumnType("int").IsRequired(true);
                 
 
@@ -67,7 +65,7 @@ namespace qlsv.Data
             modelBuilder.Entity<Class>().Property(u => u.ClassId).HasColumnType("nvarchar(30)").HasMaxLength(30).IsRequired();
             modelBuilder.Entity<Class>().Property(u => u.ClassName).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
             modelBuilder.Entity<Class>().Property(u => u.Capacity).HasColumnType("int").IsRequired();
-            modelBuilder.Entity<Class>().Property(u => u.TeacherId).HasColumnType("nvarchar(30)").HasMaxLength(100).IsRequired();
+          
             modelBuilder.Entity<Class>().Property(u => u.RoomId).HasColumnType("nvarchar(30)").HasMaxLength(30).IsRequired();
 
             modelBuilder.Entity<ClassRoom>().Property(u => u.RoomId).HasColumnType("nvarchar(30)").HasMaxLength(30).IsRequired();
@@ -75,12 +73,12 @@ namespace qlsv.Data
             modelBuilder.Entity<ClassRoom>().Property(u => u.Desks).HasColumnType("int");
 
             modelBuilder.Entity<Marks>().Property(u => u.SubjectId).HasColumnType("nvarchar(30)").HasMaxLength(30).IsRequired();
-            modelBuilder.Entity<Marks>().Property(u => u.UserId).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
+       
             modelBuilder.Entity<Marks>().Property(u => u.marks).HasColumnType("float");
 
             modelBuilder.Entity<Departments>().Property(u => u.DepartmentId).HasColumnType("nvarchar(30)").HasMaxLength(30).IsRequired();
             modelBuilder.Entity<Departments>().Property(u => u.Name).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
-            modelBuilder.Entity<Departments>().Property(u => u.LeaderId).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
+           
 
 
 
@@ -97,6 +95,10 @@ namespace qlsv.Data
 
             base.OnModelCreating(modelBuilder);
         }
+
+        //public DbSet<Users> Users { get; set; }
+        public DbSet<Class> Class { get; set; }
+        public DbSet<ClassRoom> classRoom { get; set; }
     }
 
 }

@@ -9,7 +9,8 @@ namespace qlsv.Models
     {
         
         public string SubjectId { get; set; }
-        public string UserId { set; get; }
+        public Guid UserId { set; get; }
         public float marks { set; get; }
+        public Users Users { get; set; }
     }
 }

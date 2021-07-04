@@ -9,6 +9,8 @@ namespace qlsv.Models
     {
         public string DepartmentId { set; get; }
         public string Name { set; get; }
-        public string LeaderId { set; get; }
+        public Guid LeaderId { set; get; }
+
+        public Users Users { set; get; }
     }
 }
