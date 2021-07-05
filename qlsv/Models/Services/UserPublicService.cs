@@ -127,5 +127,44 @@ namespace qlsv.Models.Services
             return new ApiErrorResult<bool>("Đăng ký không thành công");
         }
 
+        public async Task<ApiResult<bool>> UpdateUser(Guid Id, UpdateRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(Id.ToString());
+
+            if (user == null)
+            {
+                return new ApiErrorResult<bool>("Tài khoản không tồn tại");
+            }
+
+            user.Name = (request.Name == null) ? user.Name : request.Name;
+            user.Age = (int)((request.Age == null) ? user.Age : request.Age);
+            user.Dob = (DateTime)((request.Dob == null) ? user.Dob : request.Dob);
+            user.Address = (request.Address == null) ? user.Address : request.Address;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+                return new ApiErrorResult<bool>("Update không thành công");
+
+            return new ApiSuccessResult<bool>();
+        }
+
+        public async Task<ApiResult<bool>> DeleteUser(Guid Id)
+        {
+            var user = await _userManager.FindByIdAsync(Id.ToString());
+
+            if (user == null)
+                return new ApiErrorResult<bool>("Tài khoản không tồn tại");
+
+            var result = await _userManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+                return new ApiSuccessResult<bool>();
+
+            return new ApiErrorResult<bool>("Delete không thành công");
+        }
     }
+
+   
+
 }

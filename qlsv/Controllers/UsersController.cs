@@ -55,6 +55,37 @@ namespace qlsv.Controllers
             return Ok(result);
         }
 
+        [HttpPut]
+        [Route("/user/update/{Id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> UpdateUser(Guid Id, [FromForm] UpdateRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _userPublicService.UpdateUser(Id, request);
+
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+
+        }
+
+        [HttpDelete]
+        [Route("user/delete/{Id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> DeleteUser(Guid Id)
+        {
+
+            var result = await _userPublicService.DeleteUser(Id);
+
+            if (!result.IsSuccessed)
+                return BadRequest(result);
+            return Ok(result);
+        }
         [HttpGet]
         [Route("user/{Id}")]
         public async Task<IActionResult> GetOneUser(string Id)

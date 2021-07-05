@@ -14,5 +14,7 @@ namespace qlsv.Models.Interfaces
         Task<Users> GetOneUser(string Id);
         Task<ApiResult<bool>> Register(RegisterRequest request);
         Task<ApiResult<string>> Authencate(LoginRequest request);
+        Task<ApiResult<bool>> UpdateUser(Guid Id, UpdateRequest request);
+        Task<ApiResult<bool>> DeleteUser(Guid Id);
     }
 }

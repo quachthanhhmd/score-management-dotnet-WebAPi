@@ -9,8 +9,8 @@ using qlsv.Data;
 namespace qlsv.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210704095018_init")]
-    partial class init
+    [Migration("20210705032042_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
