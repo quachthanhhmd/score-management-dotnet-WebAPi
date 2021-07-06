@@ -49,9 +49,11 @@ namespace qlsv
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            //services.AddTransient<SignInManager<Users>, SignInManager<Users>>();
+            services.AddTransient<SignInManager<Users>, SignInManager<Users>>();
             services.AddTransient<UserManager<Users>, UserManager<Users>>();
             services.AddTransient<IUserPublicService, UserPublicService>();
+            services.AddTransient<IClassService, ClassService>();
+    
             services.AddControllers();
 
             services.AddSwaggerGen(c =>

@@ -161,11 +161,10 @@ namespace qlsv.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("RoomId")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<Guid>("TeacherId")
+                    b.Property<Guid?>("TeacherId")
                         .HasColumnType("char(36)");
 
                     b.Property<Guid?>("UsersId")
@@ -440,16 +439,13 @@ namespace qlsv.Migrations
                     b.HasOne("qlsv.Models.ClassRoom", null)
                         .WithMany()
                         .HasForeignKey("RoomId")
-                        .HasConstraintName("FK_Class_RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasConstraintName("FK_Class_RoomId");
 
                     b.HasOne("qlsv.Models.Users", null)
                         .WithMany()
                         .HasForeignKey("TeacherId")
                         .HasConstraintName("FK_class_Subject")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("qlsv.Models.Users", "Users")
                         .WithMany()

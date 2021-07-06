@@ -65,8 +65,7 @@ namespace qlsv.Data
             modelBuilder.Entity<Class>().Property(u => u.ClassId).HasColumnType("nvarchar(30)").HasMaxLength(30).IsRequired();
             modelBuilder.Entity<Class>().Property(u => u.ClassName).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
             modelBuilder.Entity<Class>().Property(u => u.Capacity).HasColumnType("int").IsRequired();
-          
-            modelBuilder.Entity<Class>().Property(u => u.RoomId).HasColumnType("nvarchar(30)").HasMaxLength(30).IsRequired();
+            modelBuilder.Entity<Class>().Property(u => u.RoomId).HasColumnType("nvarchar(30)").HasMaxLength(30);
 
             modelBuilder.Entity<ClassRoom>().Property(u => u.RoomId).HasColumnType("nvarchar(30)").HasMaxLength(30).IsRequired();
             modelBuilder.Entity<ClassRoom>().Property(u => u.Seats).HasColumnType("int");
@@ -89,7 +88,7 @@ namespace qlsv.Data
             modelBuilder.Entity<Marks>().HasOne<Users>().WithMany().HasPrincipalKey(ug => ug.Id).HasForeignKey(u => u.UserId).OnDelete(DeleteBehavior.NoAction).HasConstraintName("FK_Marks_User");
 
             modelBuilder.Entity<Class>().HasOne<Users>().WithMany().HasPrincipalKey(ug => ug.Id).HasForeignKey(u => u.TeacherId).OnDelete(DeleteBehavior.NoAction).HasConstraintName("FK_class_Subject");
-            modelBuilder.Entity<Class>().HasOne<ClassRoom>().WithMany().HasPrincipalKey(ug => ug.RoomId).HasForeignKey(u => u.RoomId).HasConstraintName("FK_Class_RoomId");
+            modelBuilder.Entity<Class>().HasOne<ClassRoom>().WithMany().HasForeignKey(u => u.RoomId).HasConstraintName("FK_Class_RoomId");
 
 
 

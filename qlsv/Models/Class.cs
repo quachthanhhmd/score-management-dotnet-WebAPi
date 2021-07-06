@@ -10,7 +10,7 @@ namespace qlsv.Models
         public string ClassId { get; set; }
         public string ClassName { get; set; }
         public int Capacity { get; set; }
-        public Guid TeacherId { get; set; }
+        public Guid? TeacherId { get; set; }
         public string RoomId { get; set; }
         public Users Users { get; set; }
     }

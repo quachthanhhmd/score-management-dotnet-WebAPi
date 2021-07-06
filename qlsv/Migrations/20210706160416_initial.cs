@@ -257,8 +257,8 @@ namespace qlsv.Migrations
                     ClassId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     ClassName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Capacity = table.Column<int>(type: "int", nullable: false),
-                    TeacherId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    RoomId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    TeacherId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    RoomId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     UsersId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
@@ -275,7 +275,7 @@ namespace qlsv.Migrations
                         column: x => x.RoomId,
                         principalTable: "classRoom",
                         principalColumn: "RoomId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_class_Subject",
                         column: x => x.TeacherId,
