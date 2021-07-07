@@ -1,6 +1,8 @@
 ﻿using qlsv.Data;
 using qlsv.Models.Interfaces;
+using qlsv.Utilities.Exceptions;
 using qlsv.ViewModels;
+using qlsv.ViewModels.Class;
 using qlsv.ViewModels.Common;
 using System;
 using System.Collections.Generic;
@@ -39,6 +41,45 @@ namespace qlsv.Models.Services
             return new ApiSuccessResult<bool>();
         }
 
-       
+        public async Task<Class> UpdateClass(string Id, UpdateClassRequest request)
+        {
+            var findClass = await _context.Class.FindAsync(Id);
+            if (findClass == null)
+                throw new QLSVException("Class not found");
+
+            findClass.ClassId = (request.ClassId != null) ? request.ClassId: findClass.ClassId;
+            findClass.ClassName = (request.ClassName != null) ? request.ClassName : findClass.ClassName;
+            findClass.Capacity = (int)((request.Capacity != null) ? request.Capacity : findClass.Capacity);
+            findClass.TeacherId = (request.TeacherId != null) ? request.TeacherId : findClass.TeacherId;
+            findClass.RoomId = (request.RoomId != null) ? request.RoomId : findClass.RoomId;
+
+            _context.Class.Update(findClass);
+            await _context.SaveChangesAsync();
+
+            return findClass;
+        }
+
+        public async Task<Class> GetClass(string Id)
+        {
+            var findClass = await _context.Class.FindAsync(Id);
+
+            if (findClass == null)
+                throw new QLSVException("Class not found");
+
+            return findClass;
+        }
+
+        public async Task<ApiResult<bool>> DeleteClass(string Id)
+        {
+
+            var findClass = await _context.Class.FindAsync(Id);
+
+            if (findClass == null)
+                return new ApiErrorResult<bool>("Class not found");
+
+            var result =  _context.Class.Remove(findClass);
+
+            return new ApiSuccessResult<bool>();
+        }
     }
 }

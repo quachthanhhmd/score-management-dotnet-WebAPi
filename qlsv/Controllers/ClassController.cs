@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using qlsv.ViewModels;
+using qlsv.ViewModels.Class;
 
 namespace qlsv.Controllers
 {
@@ -42,6 +43,66 @@ namespace qlsv.Controllers
 
             return Ok(result);
         }
-            
+
+        [HttpPut]
+        [Route("/class/update/{Id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> UpdateClass(string Id, [FromForm] UpdateClassRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _classService.UpdateClass(Id, request);
+
+            if (result == null)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("/class/{Id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetClass(string Id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _classService.GetClass(Id);
+
+            if (result == null)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpDelete]
+        [Route("/class/delete/{Id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> DeleteClass(string Id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _classService.DeleteClass(Id);
+
+            if (result == null)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+
+
     }
+
+    
+
 }
+
