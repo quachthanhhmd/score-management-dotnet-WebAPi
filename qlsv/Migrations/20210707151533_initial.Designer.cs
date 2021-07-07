@@ -9,7 +9,7 @@ using qlsv.Data;
 namespace qlsv.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210707102608_initial")]
+    [Migration("20210707151533_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -162,9 +162,25 @@ namespace qlsv.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("DepartmentId")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int?>("NumberCredits")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NumberLessons")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.Property<string>("RoomId")
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<int?>("Semester")
+                        .IsRequired()
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("TeacherId")
                         .HasColumnType("char(36)");
@@ -172,8 +188,14 @@ namespace qlsv.Migrations
                     b.Property<Guid?>("UsersId")
                         .HasColumnType("char(36)");
 
+                    b.Property<int?>("Year")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.HasKey("ClassId")
                         .HasName("PK_Class");
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("RoomId");
 
@@ -246,7 +268,7 @@ namespace qlsv.Migrations
                     b.Property<Guid?>("UsersId")
                         .HasColumnType("char(36)");
 
-                    b.Property<float>("marks")
+                    b.Property<float?>("marks")
                         .HasColumnType("float");
 
                     b.HasKey("SubjectId", "UserId")
@@ -259,37 +281,6 @@ namespace qlsv.Migrations
                     b.HasIndex("SubjectId", "UserId");
 
                     b.ToTable("Marks");
-                });
-
-            modelBuilder.Entity("qlsv.Models.Subjects", b =>
-                {
-                    b.Property<string>("SubjectId")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("NumberCredits")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NumberLessons")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Semester")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
-
-                    b.HasKey("SubjectId")
-                        .HasName("PK_SubjectId");
-
-                    b.HasIndex("Name", "Year", "Semester");
-
-                    b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("qlsv.Models.Users", b =>
@@ -441,6 +432,11 @@ namespace qlsv.Migrations
 
             modelBuilder.Entity("qlsv.Models.Class", b =>
                 {
+                    b.HasOne("qlsv.Models.Departments", null)
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .HasConstraintName("FK_Subject_Deparment");
+
                     b.HasOne("qlsv.Models.ClassRoom", null)
                         .WithMany()
                         .HasForeignKey("RoomId")
@@ -476,7 +472,7 @@ namespace qlsv.Migrations
 
             modelBuilder.Entity("qlsv.Models.Marks", b =>
                 {
-                    b.HasOne("qlsv.Models.Subjects", null)
+                    b.HasOne("qlsv.Models.Class", null)
                         .WithMany()
                         .HasForeignKey("SubjectId")
                         .HasConstraintName("FK_Marks_Subject")

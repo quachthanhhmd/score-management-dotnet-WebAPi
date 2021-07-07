@@ -33,7 +33,13 @@ namespace qlsv.Models.Services
                 ClassName = request.ClassName,
                 Capacity = request.Capacity,
                 TeacherId = request.TeacherId,
-                RoomId = request.RoomId
+                RoomId = request.RoomId,
+                DepartmentId = request.DepartmentId,
+                NumberCredits = request.NumberCredits,
+                NumberLessons = request.NumberLessons,
+                Year = request.Year,
+                Semester = request.Semester
+
             };
 
             await _context.Class.AddAsync(newClass);
@@ -52,6 +58,13 @@ namespace qlsv.Models.Services
             findClass.Capacity = (int)((request.Capacity != null) ? request.Capacity : findClass.Capacity);
             findClass.TeacherId = (request.TeacherId != null) ? request.TeacherId : findClass.TeacherId;
             findClass.RoomId = (request.RoomId != null) ? request.RoomId : findClass.RoomId;
+
+            findClass.DepartmentId = (request.DepartmentId != null) ? request.DepartmentId : findClass.DepartmentId;
+            findClass.NumberCredits = (request.NumberCredits != null) ? request.NumberCredits : findClass.NumberCredits;
+            findClass.NumberLessons = (request.NumberLessons != null) ? request.NumberLessons : findClass.NumberLessons;
+            findClass.Year = (request.Year != null) ? request.Year : findClass.Year;
+            findClass.Semester = (request.Semester != null) ? request.Semester : findClass.Semester;
+
 
             _context.Class.Update(findClass);
             await _context.SaveChangesAsync();

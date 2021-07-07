@@ -18,5 +18,15 @@ namespace qlsv.ViewModels
         public Guid? TeacherId { get; set; }
         [Display(Name = "Mã phòng học")]
         public string RoomId { get; set; }
+        [Display(Name = "Số tiết học")]
+        public int? NumberLessons { set; get; }
+        [Display(Name = "Số chỉ")]
+        public int? NumberCredits { set; get; }
+        [Display(Name = "Năm tổ chức")]
+        public int? Year { set; get; }
+        [Display(Name = "Học Kì")]
+        public int? Semester { set; get; }
+        [Display(Name = "Mã bộ môn")]
+        public string DepartmentId { set; get; }
     }
 }

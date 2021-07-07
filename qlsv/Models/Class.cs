@@ -10,8 +10,13 @@ namespace qlsv.Models
         public string ClassId { get; set; }
         public string ClassName { get; set; }
         public int Capacity { get; set; }
+        public int? NumberLessons { set; get; }
+        public int? NumberCredits { set; get; }
+        public int? Year { set; get; }
+        public int? Semester { set; get; }
         public Guid? TeacherId { get; set; }
         public string RoomId { get; set; }
+        public string DepartmentId { get; set; }
         public Users Users { get; set; }
     }
 }
