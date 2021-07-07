@@ -40,7 +40,7 @@ namespace qlsv.Data
             modelBuilder.Entity<Users>().HasIndex(p => p.Id).IsUnique();
             modelBuilder.Entity<Subjects>().HasIndex(u => new { u.Name, u.Year, u.Semester });
             modelBuilder.Entity<Marks>().HasIndex(u => new { u.SubjectId, u.UserId });
-            modelBuilder.Entity<Departments>().HasIndex(u =>  new { u.Name, u.LeaderId });
+            modelBuilder.Entity<Departments>().HasIndex(u =>  u.Name);
             modelBuilder.Entity<Class>().HasIndex(u =>  u.RoomId);
 
             // Configure columns  
@@ -98,6 +98,9 @@ namespace qlsv.Data
         //public DbSet<Users> Users { get; set; }
         public DbSet<Class> Class { get; set; }
         public DbSet<ClassRoom> classRoom { get; set; }
+        public DbSet<Departments> Departments { get; set; }
+        public DbSet<Subjects> Subjects { get; set; }
+        public DbSet<Marks> Marks { get; set; }
     }
 
 }

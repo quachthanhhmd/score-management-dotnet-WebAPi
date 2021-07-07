@@ -209,7 +209,7 @@ namespace qlsv.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<Guid>("LeaderId")
+                    b.Property<Guid?>("LeaderId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Name")
@@ -225,9 +225,9 @@ namespace qlsv.Migrations
 
                     b.HasIndex("LeaderId");
 
-                    b.HasIndex("UsersId");
+                    b.HasIndex("Name");
 
-                    b.HasIndex("Name", "LeaderId");
+                    b.HasIndex("UsersId");
 
                     b.ToTable("Departments");
                 });
@@ -463,8 +463,7 @@ namespace qlsv.Migrations
                         .WithMany()
                         .HasForeignKey("LeaderId")
                         .HasConstraintName("FK_Department_User")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("qlsv.Models.Users", "Users")
                         .WithMany()

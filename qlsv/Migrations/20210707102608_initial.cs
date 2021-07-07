@@ -232,7 +232,7 @@ namespace qlsv.Migrations
                 {
                     DepartmentId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    LeaderId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    LeaderId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     UsersId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
@@ -381,9 +381,9 @@ namespace qlsv.Migrations
                 column: "LeaderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Departments_Name_LeaderId",
+                name: "IX_Departments_Name",
                 table: "Departments",
-                columns: new[] { "Name", "LeaderId" });
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Departments_UsersId",
