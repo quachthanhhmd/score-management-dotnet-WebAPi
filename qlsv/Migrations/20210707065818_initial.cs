@@ -78,7 +78,9 @@ namespace qlsv.Migrations
                 {
                     RoomId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Seats = table.Column<int>(type: "int", nullable: true),
-                    Desks = table.Column<int>(type: "int", nullable: true)
+                    Desks = table.Column<int>(type: "int", nullable: true),
+                    Building = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {

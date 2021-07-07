@@ -53,6 +53,7 @@ namespace qlsv
             services.AddTransient<UserManager<Users>, UserManager<Users>>();
             services.AddTransient<IUserPublicService, UserPublicService>();
             services.AddTransient<IClassService, ClassService>();
+            services.AddTransient<IClassRoomService, ClassRoomService>();
     
             services.AddControllers();
 

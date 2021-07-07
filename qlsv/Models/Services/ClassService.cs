@@ -79,6 +79,8 @@ namespace qlsv.Models.Services
 
             var result =  _context.Class.Remove(findClass);
 
+            await _context.SaveChangesAsync();
+
             return new ApiSuccessResult<bool>();
         }
     }

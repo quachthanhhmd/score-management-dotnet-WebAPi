@@ -188,6 +188,9 @@ namespace qlsv.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<string>("Building")
+                        .HasColumnType("longtext");
+
                     b.Property<int?>("Desks")
                         .HasColumnType("int");
 

@@ -9,7 +9,7 @@ using qlsv.Data;
 namespace qlsv.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210706160416_initial")]
+    [Migration("20210707065818_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -189,6 +189,9 @@ namespace qlsv.Migrations
                     b.Property<string>("RoomId")
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Building")
+                        .HasColumnType("longtext");
 
                     b.Property<int?>("Desks")
                         .HasColumnType("int");
