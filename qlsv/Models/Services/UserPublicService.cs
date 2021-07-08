@@ -114,7 +114,7 @@ namespace qlsv.Models.Services
                 UserName = request.userName,
                 PasswordHash = request.Password,
                 Address = request.Address,
-                StudentId = "123"
+                StudentId = request.userName
             };
 
             

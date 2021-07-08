@@ -1,4 +1,5 @@
-﻿using qlsv.ViewModels;
+﻿using eShopSolution.ViewModels.Common;
+using qlsv.ViewModels;
 using qlsv.ViewModels.Marks;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,6 @@ namespace qlsv.Models.Interfaces
         Task<Marks> UpdateMark(string SubjectId, Guid UserId, UpdateMarkRequest request);
         Task<int> DeleteMark(string SubjectId, Guid UserId);
 
-       
+        Task<PageResult<MarkViewPaging>> GetPagingMark(PagingMarkRequest request);
     }
 }

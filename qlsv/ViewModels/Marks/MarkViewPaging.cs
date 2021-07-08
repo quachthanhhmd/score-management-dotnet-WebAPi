@@ -12,6 +12,6 @@ namespace qlsv.ViewModels.Marks
         public string StudentName { set; get; }
         public string SubjectName { set; get; }
         public string ClassId { set; get; }
-        public int NumberCredits { set; get; }
+        public int? NumberCredits { set; get; }
     }
 }

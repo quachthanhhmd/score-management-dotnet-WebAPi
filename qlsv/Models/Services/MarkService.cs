@@ -1,4 +1,6 @@
-﻿using qlsv.Data;
+﻿using eShopSolution.ViewModels.Common;
+using Microsoft.EntityFrameworkCore;
+using qlsv.Data;
 using qlsv.Models.Interfaces;
 using qlsv.Utilities.Exceptions;
 using qlsv.ViewModels;
@@ -82,5 +84,48 @@ namespace qlsv.Models.Services
             return await _context.SaveChangesAsync();
         }
         
+
+        public async Task<PageResult<MarkViewPaging>> GetPagingMark(PagingMarkRequest request)
+        {
+            var query = from m in _context.Marks
+                        join c in _context.Class on m.SubjectId equals c.ClassId into subIDClass
+                        from ClassID in subIDClass.DefaultIfEmpty()
+                        join u in _context.Users on m.UserId equals u.Id into uuser
+                        from ui in uuser.DefaultIfEmpty()
+                        select new { m, c = ClassID, u = ui};
+
+            if (request.UserID != null)
+            {
+                query = query.Where(x => x.u.Id == request.UserID);
+            }
+                          
+            if (!string.IsNullOrEmpty(request.SubjectId))
+            {
+                query = query.Where(x => x.m.SubjectId == request.SubjectId);
+            }
+
+            int totalRow = await query.CountAsync();
+
+            var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .Select(x => new MarkViewPaging()
+                {
+                    ClassId = x.c.ClassId,
+                    SubjectName = x.c.ClassName,
+                    StudentId = x.u.StudentId,
+                    NumberCredits = x.c.NumberCredits,
+                    StudentName = x.u.Name
+                }).ToListAsync();
+
+            //4. Select and projection
+            var pagedResult = new PageResult<MarkViewPaging>()
+            {
+                TotalRecords = totalRow,
+                PageSize = request.PageSize,
+                PageIndex = request.PageIndex,
+                Items = data
+            };
+            return pagedResult;
+        }
     }
 }
