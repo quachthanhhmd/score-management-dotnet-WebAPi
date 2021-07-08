@@ -16,7 +16,7 @@ namespace qlsv.ViewModels.Class
         [Display(Name = "Sức chứa của lớp học")]
         public int? Capacity { get; set; }
         [Display(Name = "Id của giáo viên")]
-        public Guid? TeacherId { set; get; }
+        public string? TeacherId { set; get; }
         [Display(Name = "ID của phòng học")]
         public string RoomId { set; get; }
         public int? NumberLessons { set; get; }

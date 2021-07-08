@@ -11,11 +11,11 @@ namespace qlsv.Models.Interfaces
     public interface IMarkService
     {
 
-        Task<Marks> GetMark(string SubjectId, Guid UserId);
+        Task<Marks> GetMark(string SubjectId, string UserId);
 
         Task<int> CreateMark(CreateMarkRequest request);
-        Task<Marks> UpdateMark(string SubjectId, Guid UserId, UpdateMarkRequest request);
-        Task<int> DeleteMark(string SubjectId, Guid UserId);
+        Task<Marks> UpdateMark(string SubjectId, string UserId, UpdateMarkRequest request);
+        Task<int> DeleteMark(string SubjectId, string UserId);
 
         Task<PageResult<MarkViewPaging>> GetPagingMark(PagingMarkRequest request);
     }

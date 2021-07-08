@@ -11,6 +11,5 @@ namespace qlsv.Models
         public string Name { set; get; }
         public Guid? LeaderId { set; get; }
 
-        public Users Users { set; get; }
     }
 }

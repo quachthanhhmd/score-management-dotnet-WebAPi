@@ -11,11 +11,12 @@ namespace qlsv.ViewModels
         [Display(Name = "ID của lớp học")]
         public string ClassId { set; get; }
         [Display(Name = "Tên lớp học")]
+        [MaxLength(100, ErrorMessage = "Tên của lớp học phải dưới 100 ký tự.")]
         public string ClassName { get; set; }
         [Display(Name = "Số lượng học viên")]
         public int Capacity { get; set; }
         [Display(Name = "ID của giảng viên")]
-        public Guid? TeacherId { get; set; }
+        public string? TeacherId { get; set; }
         [Display(Name = "Mã phòng học")]
         public string RoomId { get; set; }
         [Display(Name = "Số tiết học")]

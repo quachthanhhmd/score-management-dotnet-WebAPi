@@ -9,10 +9,11 @@ namespace qlsv.Models
 {
     public class Users : IdentityUser<Guid>
     {
-        public string StudentId { get; set; }    
+        public string LocalId { get; set; }    
         public string Name { get; set; }
         public DateTime Dob { get; set; }
         public int Age { set; get; }
+        public string PhotoPath { set; get; }
         public string Address { set; get; }
         public Genders Gender { set; get; }
         public Roles Role { set; get; }

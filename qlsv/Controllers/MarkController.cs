@@ -27,7 +27,7 @@ namespace qlsv.Controllers
         [HttpGet]
         [Route("/mark/{ClassId}/{UserId}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetMark(string ClassId, Guid UserId)
+        public async Task<IActionResult> GetMark(string ClassId, string UserId)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -38,9 +38,9 @@ namespace qlsv.Controllers
         }
 
         [HttpGet]
-        [Route("/mark/{ClassId}/{UserId}")]
+        [Route("/mark")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetPagingMark([FromForm] PagingMarkRequest request)
+        public async Task<IActionResult> GetPagingMark([FromQuery] PagingMarkRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -53,7 +53,7 @@ namespace qlsv.Controllers
         [HttpPost]
         [Route("/mark/create")]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateMark(CreateMarkRequest request)
+        public async Task<IActionResult> CreateMark([FromForm] CreateMarkRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -69,7 +69,7 @@ namespace qlsv.Controllers
         [HttpPut]
         [Route("/mark/update/{ClassId}/{UserId}")]
         [AllowAnonymous]
-        public async Task<IActionResult> UpdateMark(string ClassId, Guid UserId, UpdateMarkRequest request) 
+        public async Task<IActionResult> UpdateMark(string ClassId, string UserId,[FromForm] UpdateMarkRequest request) 
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -83,7 +83,7 @@ namespace qlsv.Controllers
 
         [HttpDelete]
         [Route("/mark/delete/{ClassId}/{UserId}")]
-        public async Task<IActionResult> DeleteMark(string ClassId, Guid UserId)
+        public async Task<IActionResult> DeleteMark(string ClassId, string UserId)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

@@ -24,7 +24,7 @@ namespace qlsv.Controllers
         }
 
         [HttpPost]
-        [Route("/register")]
+        [Route("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromForm] RegisterRequest request)
         {
@@ -40,7 +40,7 @@ namespace qlsv.Controllers
         }
 
         [HttpPost]
-        [Route("/login")]
+        [Route("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Authencate([FromForm] LoginRequest request)
         {
@@ -56,7 +56,7 @@ namespace qlsv.Controllers
         }
 
         [HttpPut]
-        [Route("/user/update/{Id}")]
+        [Route("update/{Id}")]
         [AllowAnonymous]
         public async Task<IActionResult> UpdateUser(Guid Id, [FromForm] UpdateRequest request)
         {
@@ -75,7 +75,7 @@ namespace qlsv.Controllers
         }
 
         [HttpDelete]
-        [Route("user/delete/{Id}")]
+        [Route("delete/{Id}")]
         [AllowAnonymous]
         public async Task<IActionResult> DeleteUser(Guid Id)
         {
@@ -87,7 +87,7 @@ namespace qlsv.Controllers
             return Ok(result);
         }
         [HttpGet]
-        [Route("user/{Id}")]
+        [Route("{Id}")]
         public async Task<IActionResult> GetOneUser(string Id)
         {
             var user = await _userPublicService.GetOneUser(Id);

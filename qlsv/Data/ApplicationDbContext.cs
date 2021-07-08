@@ -31,7 +31,7 @@ namespace qlsv.Data
             // Configure Primary Users  
             modelBuilder.Entity<Users>().HasKey(ug => ug.Id).HasName("PK_StudentId");
     
-            modelBuilder.Entity<Marks>().HasKey(u => new { u.SubjectId, u.UserId }).HasName("PK_Mark");
+            modelBuilder.Entity<Marks>().HasKey(u => new { u.SubjectId, u.localId }).HasName("PK_Mark");
             modelBuilder.Entity<Departments>().HasKey(u => u.DepartmentId).HasName("PK_Department");
             modelBuilder.Entity<Class>().HasKey(u => u.ClassId).HasName("PK_Class");
             modelBuilder.Entity<ClassRoom>().HasKey(u => u.RoomId).HasName("PK_Class");
@@ -39,18 +39,19 @@ namespace qlsv.Data
             // Configure indexes  
             modelBuilder.Entity<Users>().HasIndex(p => p.Id).IsUnique();
    
-            modelBuilder.Entity<Marks>().HasIndex(u => new { u.SubjectId, u.UserId });
+            modelBuilder.Entity<Marks>().HasIndex(u => new { u.SubjectId, u.localId });
             modelBuilder.Entity<Departments>().HasIndex(u =>  u.Name);
             modelBuilder.Entity<Class>().HasIndex(u =>  u.RoomId);
 
             // Configure columns  
-            modelBuilder.Entity<Users>().Property(ug => ug.StudentId).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
+            modelBuilder.Entity<Users>().Property(ug => ug.LocalId).HasColumnType("nvarchar(20)").HasMaxLength(20).IsRequired();
             modelBuilder.Entity<Users>().Property(ug => ug.Name).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
             modelBuilder.Entity<Users>().Property(ug => ug.Age).HasColumnType("int").IsRequired();
             modelBuilder.Entity<Users>().Property(ug => ug.Address).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
             modelBuilder.Entity<Users>().Property(ug => ug.Gender).HasColumnType("int").IsRequired(true);
             modelBuilder.Entity<Users>().Property(ug => ug.Dob).HasColumnType("DATE").IsRequired(true);
             modelBuilder.Entity<Users>().Property(ug => ug.Role).HasColumnType("int").IsRequired(true);
+            modelBuilder.Entity<Users>().Property(ug => ug.PhotoPath).HasColumnType("nvarchar(100").HasMaxLength(100);
                 
 
 
@@ -84,9 +85,9 @@ namespace qlsv.Data
             modelBuilder.Entity<Departments>().HasOne<Users>().WithMany().HasPrincipalKey(ug => ug.Id).HasForeignKey(u => u.LeaderId).OnDelete(DeleteBehavior.NoAction).HasConstraintName("FK_Department_User");
 
             modelBuilder.Entity<Marks>().HasOne<Class>().WithMany().HasPrincipalKey(ug => ug.ClassId).HasForeignKey(u => u.SubjectId).OnDelete(DeleteBehavior.NoAction).HasConstraintName("FK_Marks_Subject");
-            modelBuilder.Entity<Marks>().HasOne<Users>().WithMany().HasPrincipalKey(ug => ug.Id).HasForeignKey(u => u.UserId).OnDelete(DeleteBehavior.NoAction).HasConstraintName("FK_Marks_User");
+            modelBuilder.Entity<Marks>().HasOne<Users>().WithMany().HasPrincipalKey(ug => ug.LocalId).HasForeignKey(u => u.localId).OnDelete(DeleteBehavior.NoAction).HasConstraintName("FK_Marks_User");
 
-            modelBuilder.Entity<Class>().HasOne<Users>().WithMany().HasPrincipalKey(ug => ug.Id).HasForeignKey(u => u.TeacherId).OnDelete(DeleteBehavior.NoAction).HasConstraintName("FK_class_Subject");
+            modelBuilder.Entity<Class>().HasOne<Users>().WithMany().HasPrincipalKey(ug => ug.LocalId).HasForeignKey(u => u.TeacherId).OnDelete(DeleteBehavior.NoAction).HasConstraintName("FK_class_Subject");
             modelBuilder.Entity<Class>().HasOne<ClassRoom>().WithMany().HasForeignKey(u => u.RoomId).HasConstraintName("FK_Class_RoomId");
 
             modelBuilder.Entity<Class>().HasOne<Departments>().WithMany().HasForeignKey(u => u.DepartmentId).HasConstraintName("FK_Subject_Deparment");

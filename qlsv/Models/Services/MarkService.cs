@@ -23,10 +23,10 @@ namespace qlsv.Models.Services
             _context = context;
         }
 
-        public async Task<Marks> GetMark(string SubjectId, Guid UserId)
+        public async Task<Marks> GetMark(string SubjectId, string UserId)
         {
 
-            var mark = await _context.Marks.FindAsync(new { SubjectId, UserId});
+            var mark = await _context.Marks.FindAsync( SubjectId, UserId);
 
             if (mark == null)
                 throw new QLSVException("Mark not found");
@@ -36,7 +36,7 @@ namespace qlsv.Models.Services
 
         public async Task<int> CreateMark(CreateMarkRequest request)
         {
-            var mark = await _context.Marks.FindAsync(new { request.SubjectId, request.UserId });
+            var mark = await _context.Marks.FindAsync(request.SubjectId, request.StudentID );
 
             if (mark != null)
                 throw new QLSVException("Mark has ben already");
@@ -44,7 +44,7 @@ namespace qlsv.Models.Services
             var newMark = new Marks()
             {
                 SubjectId = request.SubjectId,
-                UserId = request.UserId,
+                localId = request.StudentID,
                 marks = request?.marks
             };
 
@@ -52,18 +52,19 @@ namespace qlsv.Models.Services
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<Marks> UpdateMark(string SubjectId, Guid UserId, UpdateMarkRequest request)
+        public async Task<Marks> UpdateMark(string SubjectId, string UserId, UpdateMarkRequest request)
         {
-            var mark = await _context.Marks.FindAsync(new { request.SubjectId, request.UserId });
+            var mark = await _context.Marks.FindAsync( request.SubjectId, request.UserId );
 
             if (mark == null)
                 throw new QLSVException("Mark not found");
 
             mark.SubjectId = string.IsNullOrEmpty(request.SubjectId) ? mark.SubjectId : request.SubjectId;
-            mark.UserId = (Guid)(request.UserId == null ? mark.UserId : request.UserId);
-            mark.SubjectId = (request.marks == null) ? mark.SubjectId : request.SubjectId;
+            mark.localId = string.IsNullOrEmpty(request.UserId) ? mark.localId : request.UserId;
+            mark.marks = (request.marks == null) ? mark.marks : request.marks;
 
             _context.Marks.Update(mark);
+
             var result = await _context.SaveChangesAsync();
 
             if (result == 0)
@@ -72,9 +73,9 @@ namespace qlsv.Models.Services
             return mark;
         }
 
-        public async Task<int> DeleteMark(string SubjectId, Guid UserId)
+        public async Task<int> DeleteMark(string SubjectId, string UserId)
         {
-            var mark = await _context.Marks.FindAsync(new { SubjectId, UserId });
+            var mark = await _context.Marks.FindAsync(SubjectId, UserId );
 
             if (mark == null)
                 throw new QLSVException("Mark not found");
@@ -90,13 +91,13 @@ namespace qlsv.Models.Services
             var query = from m in _context.Marks
                         join c in _context.Class on m.SubjectId equals c.ClassId into subIDClass
                         from ClassID in subIDClass.DefaultIfEmpty()
-                        join u in _context.Users on m.UserId equals u.Id into uuser
+                        join u in _context.Users on m.localId equals u.LocalId into uuser
                         from ui in uuser.DefaultIfEmpty()
                         select new { m, c = ClassID, u = ui};
 
             if (request.UserID != null)
             {
-                query = query.Where(x => x.u.Id == request.UserID);
+                query = query.Where(x => x.u.LocalId == request.UserID);
             }
                           
             if (!string.IsNullOrEmpty(request.SubjectId))
@@ -112,7 +113,7 @@ namespace qlsv.Models.Services
                 {
                     ClassId = x.c.ClassId,
                     SubjectName = x.c.ClassName,
-                    StudentId = x.u.StudentId,
+                    StudentId = x.u.LocalId,
                     NumberCredits = x.c.NumberCredits,
                     StudentName = x.u.Name
                 }).ToListAsync();

@@ -36,10 +36,11 @@ namespace qlsv.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    StudentId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LocalId = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Dob = table.Column<DateTime>(type: "DATE", nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
+                    PhotoPath = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Gender = table.Column<int>(type: "int", nullable: false),
                     Role = table.Column<int>(type: "int", nullable: false),
@@ -69,6 +70,7 @@ namespace qlsv.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StudentId", x => x.Id);
+                    table.UniqueConstraint("AK_AspNetUsers_LocalId", x => x.LocalId);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -215,8 +217,7 @@ namespace qlsv.Migrations
                 {
                     DepartmentId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    LeaderId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    UsersId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                    LeaderId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -226,12 +227,6 @@ namespace qlsv.Migrations
                         column: x => x.LeaderId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Departments_AspNetUsers_UsersId",
-                        column: x => x.UsersId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -246,20 +241,13 @@ namespace qlsv.Migrations
                     NumberCredits = table.Column<int>(type: "int", nullable: false),
                     Year = table.Column<int>(type: "int", nullable: false),
                     Semester = table.Column<int>(type: "int", nullable: false),
-                    TeacherId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    TeacherId = table.Column<string>(type: "nvarchar(20)", nullable: true),
                     RoomId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    DepartmentId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    UsersId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                    DepartmentId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Class", x => x.ClassId);
-                    table.ForeignKey(
-                        name: "FK_Class_AspNetUsers_UsersId",
-                        column: x => x.UsersId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Class_RoomId",
                         column: x => x.RoomId,
@@ -270,7 +258,7 @@ namespace qlsv.Migrations
                         name: "FK_class_Subject",
                         column: x => x.TeacherId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "LocalId");
                     table.ForeignKey(
                         name: "FK_Subject_Deparment",
                         column: x => x.DepartmentId,
@@ -285,19 +273,12 @@ namespace qlsv.Migrations
                 columns: table => new
                 {
                     SubjectId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    marks = table.Column<float>(type: "float", nullable: true),
-                    UsersId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                    localId = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    marks = table.Column<float>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mark", x => new { x.SubjectId, x.UserId });
-                    table.ForeignKey(
-                        name: "FK_Marks_AspNetUsers_UsersId",
-                        column: x => x.UsersId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                    table.PrimaryKey("PK_Mark", x => new { x.SubjectId, x.localId });
                     table.ForeignKey(
                         name: "FK_Marks_Subject",
                         column: x => x.SubjectId,
@@ -305,9 +286,9 @@ namespace qlsv.Migrations
                         principalColumn: "ClassId");
                     table.ForeignKey(
                         name: "FK_Marks_User",
-                        column: x => x.UserId,
+                        column: x => x.localId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "LocalId");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -370,11 +351,6 @@ namespace qlsv.Migrations
                 column: "TeacherId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Class_UsersId",
-                table: "Class",
-                column: "UsersId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Departments_LeaderId",
                 table: "Departments",
                 column: "LeaderId");
@@ -385,24 +361,14 @@ namespace qlsv.Migrations
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Departments_UsersId",
-                table: "Departments",
-                column: "UsersId");
+                name: "IX_Marks_localId",
+                table: "Marks",
+                column: "localId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Marks_SubjectId_UserId",
+                name: "IX_Marks_SubjectId_localId",
                 table: "Marks",
-                columns: new[] { "SubjectId", "UserId" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Marks_UserId",
-                table: "Marks",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Marks_UsersId",
-                table: "Marks",
-                column: "UsersId");
+                columns: new[] { "SubjectId", "localId" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

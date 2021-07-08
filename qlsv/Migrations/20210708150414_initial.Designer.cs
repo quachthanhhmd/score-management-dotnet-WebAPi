@@ -9,7 +9,7 @@ using qlsv.Data;
 namespace qlsv.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210707151533_initial")]
+    [Migration("20210708150414_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -182,11 +182,8 @@ namespace qlsv.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("TeacherId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("UsersId")
-                        .HasColumnType("char(36)");
+                    b.Property<string>("TeacherId")
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int?>("Year")
                         .IsRequired()
@@ -200,8 +197,6 @@ namespace qlsv.Migrations
                     b.HasIndex("RoomId");
 
                     b.HasIndex("TeacherId");
-
-                    b.HasIndex("UsersId");
 
                     b.ToTable("Class");
                 });
@@ -241,17 +236,12 @@ namespace qlsv.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid?>("UsersId")
-                        .HasColumnType("char(36)");
-
                     b.HasKey("DepartmentId")
                         .HasName("PK_Department");
 
                     b.HasIndex("LeaderId");
 
                     b.HasIndex("Name");
-
-                    b.HasIndex("UsersId");
 
                     b.ToTable("Departments");
                 });
@@ -262,23 +252,18 @@ namespace qlsv.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("UsersId")
-                        .HasColumnType("char(36)");
+                    b.Property<string>("localId")
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<float?>("marks")
                         .HasColumnType("float");
 
-                    b.HasKey("SubjectId", "UserId")
+                    b.HasKey("SubjectId", "localId")
                         .HasName("PK_Mark");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("localId");
 
-                    b.HasIndex("UsersId");
-
-                    b.HasIndex("SubjectId", "UserId");
+                    b.HasIndex("SubjectId", "localId");
 
                     b.ToTable("Marks");
                 });
@@ -317,6 +302,11 @@ namespace qlsv.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
+                    b.Property<string>("LocalId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("tinyint(1)");
 
@@ -345,16 +335,15 @@ namespace qlsv.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<string>("PhotoPath")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
-
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
@@ -446,13 +435,8 @@ namespace qlsv.Migrations
                         .WithMany()
                         .HasForeignKey("TeacherId")
                         .HasConstraintName("FK_class_Subject")
+                        .HasPrincipalKey("LocalId")
                         .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("qlsv.Models.Users", "Users")
-                        .WithMany()
-                        .HasForeignKey("UsersId");
-
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("qlsv.Models.Departments", b =>
@@ -462,12 +446,6 @@ namespace qlsv.Migrations
                         .HasForeignKey("LeaderId")
                         .HasConstraintName("FK_Department_User")
                         .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("qlsv.Models.Users", "Users")
-                        .WithMany()
-                        .HasForeignKey("UsersId");
-
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("qlsv.Models.Marks", b =>
@@ -481,16 +459,11 @@ namespace qlsv.Migrations
 
                     b.HasOne("qlsv.Models.Users", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("localId")
                         .HasConstraintName("FK_Marks_User")
+                        .HasPrincipalKey("LocalId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.HasOne("qlsv.Models.Users", "Users")
-                        .WithMany()
-                        .HasForeignKey("UsersId");
-
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

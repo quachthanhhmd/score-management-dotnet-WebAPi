@@ -14,9 +14,9 @@ namespace qlsv.Models
         public int? NumberCredits { set; get; }
         public int? Year { set; get; }
         public int? Semester { set; get; }
-        public Guid? TeacherId { get; set; }
+        public string TeacherId { get; set; }
         public string RoomId { get; set; }
         public string DepartmentId { get; set; }
-        public Users Users { get; set; }
+
     }
 }

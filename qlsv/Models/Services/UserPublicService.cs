@@ -17,6 +17,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace qlsv.Models.Services
 {
@@ -27,15 +29,21 @@ namespace qlsv.Models.Services
         private readonly UserManager<Users> _userManager;
         private readonly SignInManager<Users> _signInUser;
         private readonly IConfiguration _configuration;
+        
+        private readonly IWebHostEnvironment _hostingEnvironment;
+
+        
         public UserPublicService(
             UserManager<Users> userManager,
             SignInManager<Users> SignInUser,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IWebHostEnvironment hostingEnvironment
             )
         {
             _userManager = userManager;
             _signInUser = SignInUser;
             _configuration = configuration;
+            _hostingEnvironment = hostingEnvironment;
          }
         
         public async Task<Users> GetOneUser(string Id)
@@ -103,6 +111,15 @@ namespace qlsv.Models.Services
                 return new ApiErrorResult<bool>("Mât khẩu không khớp");
             }
 
+            string uniqueFileName = null;
+            if (request.Photo != null)
+            {
+                string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + request.Photo.FileName;
+                string filePath = Path.Combine(uploadFolder, uniqueFileName);
+                request.Photo.CopyTo(new FileStream(filePath, FileMode.Create));
+            }
+
             var newUser = new Users()
             {
                 Dob = request.Dob,
@@ -114,7 +131,8 @@ namespace qlsv.Models.Services
                 UserName = request.userName,
                 PasswordHash = request.Password,
                 Address = request.Address,
-                StudentId = request.userName
+                LocalId = request.LocalID,
+                PhotoPath = uniqueFileName,
             };
 
             
@@ -136,10 +154,30 @@ namespace qlsv.Models.Services
                 return new ApiErrorResult<bool>("Tài khoản không tồn tại");
             }
 
+            
+            
+            if (request.Photo != null)
+            {
+
+                //1. Declare 
+                string uniqueFileName = null;
+
+                //2. Create Path and Image
+                string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + request.Photo.FileName;
+                string filePath = Path.Combine(uploadFolder, uniqueFileName);
+                request.Photo.CopyTo(new FileStream(filePath, FileMode.Create));
+
+                //3. Update
+                user.PhotoPath = uniqueFileName;
+            }
+
             user.Name = (request.Name == null) ? user.Name : request.Name;
             user.Age = (int)((request.Age == null) ? user.Age : request.Age);
             user.Dob = (DateTime)((request.Dob == null) ? user.Dob : request.Dob);
             user.Address = (request.Address == null) ? user.Address : request.Address;
+            user.Email = (request.Email == null) ? user.Email : request.Email;
+            user.PhoneNumber = (request.PhoneNumber == null) ? user.PhoneNumber : request.PhoneNumber;
 
             var result = await _userManager.UpdateAsync(user);
 
