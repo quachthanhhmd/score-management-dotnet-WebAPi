@@ -19,17 +19,17 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using qlsv.ViewModels.Marks;
 
 namespace qlsv.Models.Services
 {
 
     public class UserPublicService : IUserPublicService
     {
-   
+        private readonly ApplicationDbContext _context;
         private readonly UserManager<Users> _userManager;
         private readonly SignInManager<Users> _signInUser;
         private readonly IConfiguration _configuration;
-        
         private readonly IWebHostEnvironment _hostingEnvironment;
 
         
@@ -37,13 +37,15 @@ namespace qlsv.Models.Services
             UserManager<Users> userManager,
             SignInManager<Users> SignInUser,
             IConfiguration configuration,
-            IWebHostEnvironment hostingEnvironment
+            IWebHostEnvironment hostingEnvironment,
+            ApplicationDbContext context
             )
         {
             _userManager = userManager;
             _signInUser = SignInUser;
             _configuration = configuration;
             _hostingEnvironment = hostingEnvironment;
+            _context = context;
          }
         
         public async Task<Users> GetOneUser(string Id)
@@ -201,6 +203,9 @@ namespace qlsv.Models.Services
 
             return new ApiErrorResult<bool>("Delete không thành công");
         }
+
+
+       
     }
 
    

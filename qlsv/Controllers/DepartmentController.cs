@@ -24,7 +24,7 @@ namespace qlsv.Controllers
         }
 
         [HttpGet]
-        [Route("/department/{Id}")]
+        [Route("{Id}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetDepartment(string Id)
         {
@@ -40,7 +40,7 @@ namespace qlsv.Controllers
         }
 
         [HttpGet]
-        [Route("/department")]
+        [Route("")]
         [AllowAnonymous]
         public async Task<IActionResult> GetPagingDepartment([FromQuery] PagingDepartmentRequest request)
         {
@@ -56,7 +56,7 @@ namespace qlsv.Controllers
         }
 
         [HttpPost]
-        [Route("/department/create")]
+        [Route("create")]
         [AllowAnonymous]
         public async Task<IActionResult> CreateDepartment([FromForm] CreateDepartmentRequest request)
         {
@@ -72,7 +72,7 @@ namespace qlsv.Controllers
         }
 
         [HttpPut]
-        [Route("/department/update/{Id}")]
+        [Route("update/{Id}")]
         [AllowAnonymous]
         public async Task<IActionResult> UpdateDepartment(string Id, [FromForm]UpdateDepartmentRequest request)
         {
@@ -88,7 +88,7 @@ namespace qlsv.Controllers
         }
 
         [HttpDelete]
-        [Route("/department/delete/{Id}")]
+        [Route("delete/{Id}")]
         [AllowAnonymous]
         public async Task<IActionResult> DeleteDepartment(string Id)
         {

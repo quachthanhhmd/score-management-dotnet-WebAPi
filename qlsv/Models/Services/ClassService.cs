@@ -60,10 +60,10 @@ namespace qlsv.Models.Services
             findClass.RoomId = (request.RoomId != null) ? request.RoomId : findClass.RoomId;
 
             findClass.DepartmentId = (request.DepartmentId != null) ? request.DepartmentId : findClass.DepartmentId;
-            findClass.NumberCredits = (request.NumberCredits != null) ? request.NumberCredits : findClass.NumberCredits;
-            findClass.NumberLessons = (request.NumberLessons != null) ? request.NumberLessons : findClass.NumberLessons;
-            findClass.Year = (request.Year != null) ? request.Year : findClass.Year;
-            findClass.Semester = (request.Semester != null) ? request.Semester : findClass.Semester;
+            findClass.NumberCredits = (int)((request.NumberCredits != null) ? request.NumberCredits : findClass.NumberCredits);
+            findClass.NumberLessons = (int)((request.NumberLessons != null) ? request.NumberLessons : findClass.NumberLessons);
+            findClass.Year = (int)((request.Year != null) ? request.Year : findClass.Year);
+            findClass.Semester = (int)((request.Semester != null) ? request.Semester : findClass.Semester);
 
 
             _context.Class.Update(findClass);

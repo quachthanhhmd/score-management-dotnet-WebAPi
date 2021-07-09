@@ -27,7 +27,7 @@ namespace qlsv.Controllers
         }
 
         [HttpPost]
-        [Route("/class/create")]
+        [Route("create")]
         [AllowAnonymous]
         public async Task<IActionResult> CreateClass([FromForm] AddClassRequest request)
         {
@@ -45,7 +45,7 @@ namespace qlsv.Controllers
         }
 
         [HttpPut]
-        [Route("/class/update/{Id}")]
+        [Route("update/{Id}")]
         [AllowAnonymous]
         public async Task<IActionResult> UpdateClass(string Id, [FromForm] UpdateClassRequest request)
         {
@@ -63,7 +63,7 @@ namespace qlsv.Controllers
         }
 
         [HttpGet]
-        [Route("/class/{Id}")]
+        [Route("{Id}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetClass(string Id)
         {
@@ -81,7 +81,7 @@ namespace qlsv.Controllers
         }
 
         [HttpDelete]
-        [Route("/class/delete/{Id}")]
+        [Route("delete/{Id}")]
         [AllowAnonymous]
         public async Task<IActionResult> DeleteClass(string Id)
         {

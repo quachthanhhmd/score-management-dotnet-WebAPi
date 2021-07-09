@@ -5,6 +5,7 @@ using qlsv.Models.Interfaces;
 using qlsv.Utilities.Exceptions;
 using qlsv.ViewModels;
 using qlsv.ViewModels.Marks;
+using qlsv.ViewModels.Marks.GPA;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -127,6 +128,78 @@ namespace qlsv.Models.Services
                 Items = data
             };
             return pagedResult;
+        }
+
+        public async Task<GPAView> GetGPA(string StudentID)
+        {
+            var query = from m in _context.Marks
+                        join c in _context.Class on m.SubjectId equals c.ClassId
+                        select new { m, c };
+
+            query = query.Where(x => x.m.localId == StudentID);
+
+            var data = await query.Select(x => new
+            {
+                Mark = x.m.marks,
+                Credit = x.c.NumberCredits,
+            }).ToArrayAsync();
+
+            var GPA = new GPAView() {
+                GPA = 0,
+                TotalCredit = 0
+            };
+          
+            foreach (var item in data)
+            {
+                if (item.Mark != null)
+                {
+                    GPA.GPA += (float)item.Mark * item.Credit;
+                    GPA.TotalCredit += item.Credit;
+                }
+            }
+
+            //Caculate GPA
+            GPA.GPA /= GPA.TotalCredit;
+            return GPA;
+        }
+
+
+        public async Task<MarkGPAView> GetTranscript(string StudentId)
+        {
+            var query = from m in _context.Marks
+                        join u in _context.Users on m.localId equals u.LocalId
+                        join c in _context.Class on m.SubjectId equals c.ClassId
+                        select new { m, u, c };
+
+            query = query.Where(x => x.u.LocalId == StudentId);
+
+            var Data = query.Select(x => new MarkGPAView()
+            {
+
+                ListMark = query.Select(y => new MarkView()
+                {
+                    ClassId = y.c.ClassId,
+                    ClassName = y.c.ClassName,
+                    NumberCredit = y.c.NumberCredits,
+                    Semester = y.c.Semester,
+                    Mark = (float)y.m.marks,
+                    Year = y.c.Year
+                }).ToList(),
+
+                Address = x.u.Address,
+                StudentName = x.u.Name,
+                StudentId = x.u.LocalId,
+                Email = x.u.Email,
+                Dob = x.u.Dob,
+
+            }).FirstOrDefault();
+
+            var markView =  await this.GetGPA(StudentId);
+
+            Data.GPA = markView.GPA;
+            Data.totalCredit = markView.TotalCredit;
+
+            return Data;
         }
     }
 }

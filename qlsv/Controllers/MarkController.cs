@@ -25,7 +25,7 @@ namespace qlsv.Controllers
         }
 
         [HttpGet]
-        [Route("/mark/{ClassId}/{UserId}")]
+        [Route("{ClassId}/{UserId}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetMark(string ClassId, string UserId)
         {
@@ -38,7 +38,7 @@ namespace qlsv.Controllers
         }
 
         [HttpGet]
-        [Route("/mark")]
+        [Route("")]
         [AllowAnonymous]
         public async Task<IActionResult> GetPagingMark([FromQuery] PagingMarkRequest request)
         {
@@ -51,7 +51,7 @@ namespace qlsv.Controllers
         }
 
         [HttpPost]
-        [Route("/mark/create")]
+        [Route("create")]
         [AllowAnonymous]
         public async Task<IActionResult> CreateMark([FromForm] CreateMarkRequest request)
         {
@@ -67,7 +67,7 @@ namespace qlsv.Controllers
         }
 
         [HttpPut]
-        [Route("/mark/update/{ClassId}/{UserId}")]
+        [Route("update/{ClassId}/{UserId}")]
         [AllowAnonymous]
         public async Task<IActionResult> UpdateMark(string ClassId, string UserId,[FromForm] UpdateMarkRequest request) 
         {
@@ -82,7 +82,7 @@ namespace qlsv.Controllers
         }
 
         [HttpDelete]
-        [Route("/mark/delete/{ClassId}/{UserId}")]
+        [Route("delete/{ClassId}/{UserId}")]
         public async Task<IActionResult> DeleteMark(string ClassId, string UserId)
         {
             if (!ModelState.IsValid)
@@ -93,6 +93,40 @@ namespace qlsv.Controllers
                 return BadRequest("Delete Unsucessfully");
 
             return Ok();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("gettranscript/{Id}")]
+        //Only student with your Id and Admin can get transcripy of THIS student.
+        public async Task<IActionResult> GetTranscript(string Id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _markService.GetTranscript(Id);
+
+            if (result == null)
+                return BadRequest("Get Failed!!");
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("getgpa/{Id}")]
+        //Only student with your Id and Admin can get transcripy of THIS student.
+        public async Task<IActionResult> GetGPA(string Id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _markService.GetGPA(Id);
+
+            if (result == null)
+                return BadRequest("Get Failed!!");
+
+            return Ok(result);
         }
     }
 }

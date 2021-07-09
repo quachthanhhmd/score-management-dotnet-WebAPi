@@ -24,7 +24,7 @@ namespace qlsv.Controllers
         }
 
         [HttpPost]
-        [Route("/classroom/create")]
+        [Route("create")]
         [AllowAnonymous]
         public async Task<IActionResult> CreateClassRoom([FromForm] CreateClassRoomRequest request)
         {
@@ -40,7 +40,7 @@ namespace qlsv.Controllers
         }
 
         [HttpPut]
-        [Route("/classroom/update/{Id}")]
+        [Route("update/{Id}")]
         [AllowAnonymous]
         public async Task<IActionResult> UpdateClassRoom(string Id, [FromForm] CreateClassRoomRequest request)
         {
@@ -57,7 +57,7 @@ namespace qlsv.Controllers
 
 
         [HttpDelete]
-        [Route("/classroom/delete/{Id}")]
+        [Route("delete/{Id}")]
         [AllowAnonymous]
         public async Task<IActionResult> DeleteClassRoomm(string Id)
         {
@@ -73,7 +73,7 @@ namespace qlsv.Controllers
         }
 
         [HttpGet]
-        [Route("/classroom/{Id}")]
+        [Route("{Id}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetClassRoom(string Id)
         {
@@ -88,7 +88,7 @@ namespace qlsv.Controllers
         }
 
         [HttpGet]
-        [Route("/classroom")]
+        [Route("")]
         [AllowAnonymous]
         public async Task<IActionResult> GetPagingClassRoom([FromQuery] PagingClassRequest request)
         {
@@ -104,7 +104,7 @@ namespace qlsv.Controllers
         }
 
         [HttpDelete]
-        [Route("/classroom/delete/{Id}")]
+        [Route("delete/{Id}")]
         [AllowAnonymous]
         public async Task<IActionResult> DeleteClassRoom(string Id)
         {
