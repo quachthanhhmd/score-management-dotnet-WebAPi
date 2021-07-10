@@ -146,5 +146,24 @@ namespace qlsv.Controllers
             return Ok("Xuất file PD thành công. File được lưu dưới dạng mssv.pdf");
         }
 
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("GetMarkSemester")]
+        //Only student with your Id and Admin can get transcripy of THIS student.
+        public async Task<IActionResult> GetMarkInSemester([FromQuery]MarkSemesterRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _markService.GetMarkInSemester(request);
+
+            if (result == null)
+                return BadRequest("Get Failed!!");
+
+            return Ok(result);
+        }
+
     }
 }

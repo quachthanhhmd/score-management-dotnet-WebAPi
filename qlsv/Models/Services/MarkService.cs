@@ -215,6 +215,34 @@ namespace qlsv.Models.Services
 
         }
 
+        //<summary>
+        //get mark in semester of year
+        //</summary>
+        public async Task<List<MarkViewSemester>> GetMarkInSemester(MarkSemesterRequest request)
+        {
+      
+            var query = from c in _context.Class
+                        join m in _context.Marks on c.ClassId equals m.SubjectId
+                        select new { c, m };
+
+            query = query.Where(x => x.c.Year == request.Year && x.c.Semester == request.Semester && x.m.localId == request.Id);
+
+            var data = await query.Select(x => new MarkViewSemester()
+            {
+                ClassId = x.c.ClassId,
+                ClassName = x.c.ClassName,
+                Credit = x.c.NumberCredits,
+                Mark = x.m.marks,
+                ClassTime = x.c.Year.ToString() + "/" + x.c.Semester.ToString()
+            }).ToListAsync();
+
+
+            return data;
+        }
+
+        //<summary>
+        //Export Academic transcript to PDF
+        //</summary>
         public async Task<int> ExportTranscriptToPdf(string studentId)
         {
             MarkGPAView data = await this.GetTranscript(studentId);

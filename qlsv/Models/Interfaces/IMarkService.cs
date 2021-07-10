@@ -15,14 +15,19 @@ namespace qlsv.Models.Interfaces
         Task<Marks> GetMark(string SubjectId, string UserId);
 
         Task<int> CreateMark(CreateMarkRequest request);
+        
         Task<Marks> UpdateMark(string SubjectId, string UserId, UpdateMarkRequest request);
+        
         Task<int> DeleteMark(string SubjectId, string UserId);
 
         Task<PageResult<MarkViewPaging>> GetPagingMark(PagingMarkRequest request);
 
         Task<MarkGPAView> GetTranscript(string StudentId);
+        
         Task<GPAView> GetGPA(string StudentID);
 
         Task<int> ExportTranscriptToPdf(string studentId);
+
+        Task<List<MarkViewSemester>> GetMarkInSemester(MarkSemesterRequest request);
     }
 }
