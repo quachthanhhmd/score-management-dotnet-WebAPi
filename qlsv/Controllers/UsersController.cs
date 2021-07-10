@@ -57,7 +57,6 @@ namespace qlsv.Controllers
 
         [HttpPut]
         [Route("update/{Id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> UpdateUser(Guid Id, [FromForm] UpdateRequest request)
         {
             if (!ModelState.IsValid)
@@ -76,7 +75,6 @@ namespace qlsv.Controllers
 
         [HttpDelete]
         [Route("delete/{Id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> DeleteUser(Guid Id)
         {
 
@@ -97,7 +95,6 @@ namespace qlsv.Controllers
 
         [HttpPost]
         [Route("Enroll/{Id}/{ClassId}")]
-        [AllowAnonymous]
         public async Task<IActionResult> EnrollClass(Guid Id, string ClassId)
         {
             var result = await _userPublicService.EnrollClass(Id, ClassId);

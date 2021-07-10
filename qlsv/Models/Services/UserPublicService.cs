@@ -33,7 +33,6 @@ namespace qlsv.Models.Services
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IMarkService _markService;
 
-        
         public UserPublicService(
             UserManager<Users> userManager,
             SignInManager<Users> SignInUser,
@@ -49,7 +48,8 @@ namespace qlsv.Models.Services
             _hostingEnvironment = hostingEnvironment;
             _context = context;
             _markService = markService;
-         }
+           
+        }
         
         public async Task<Users> GetOneUser(string Id)
         {
@@ -247,6 +247,8 @@ namespace qlsv.Models.Services
             return new ApiSuccessResult<int>();
 
         }
+        
+        
     }
 
    

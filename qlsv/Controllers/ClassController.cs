@@ -28,7 +28,6 @@ namespace qlsv.Controllers
 
         [HttpPost]
         [Route("create")]
-        [AllowAnonymous]
         public async Task<IActionResult> CreateClass([FromForm] AddClassRequest request)
         {
             if (!ModelState.IsValid)
@@ -64,7 +63,6 @@ namespace qlsv.Controllers
 
         [HttpGet]
         [Route("{Id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetClass(string Id)
         {
             if (!ModelState.IsValid)
@@ -82,7 +80,6 @@ namespace qlsv.Controllers
 
         [HttpDelete]
         [Route("delete/{Id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> DeleteClass(string Id)
         {
             if (!ModelState.IsValid)

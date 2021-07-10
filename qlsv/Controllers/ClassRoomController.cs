@@ -25,7 +25,6 @@ namespace qlsv.Controllers
 
         [HttpPost]
         [Route("create")]
-        [AllowAnonymous]
         public async Task<IActionResult> CreateClassRoom([FromForm] CreateClassRoomRequest request)
         {
             if (!ModelState.IsValid)
@@ -41,7 +40,6 @@ namespace qlsv.Controllers
 
         [HttpPut]
         [Route("update/{Id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> UpdateClassRoom(string Id, [FromForm] CreateClassRoomRequest request)
         {
             if (!ModelState.IsValid)
@@ -58,7 +56,6 @@ namespace qlsv.Controllers
 
         [HttpDelete]
         [Route("delete/{Id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> DeleteClassRoomm(string Id)
         {
             if (!ModelState.IsValid)
@@ -74,7 +71,6 @@ namespace qlsv.Controllers
 
         [HttpGet]
         [Route("{Id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetClassRoom(string Id)
         {
             if (!ModelState.IsValid)
@@ -89,7 +85,6 @@ namespace qlsv.Controllers
 
         [HttpGet]
         [Route("")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetPagingClassRoom([FromQuery] PagingClassRequest request)
         {
             if (!ModelState.IsValid)
@@ -105,7 +100,6 @@ namespace qlsv.Controllers
 
         [HttpDelete]
         [Route("delete/{Id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> DeleteClassRoom(string Id)
         {
             if (!ModelState.IsValid)
