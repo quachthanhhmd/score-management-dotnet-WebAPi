@@ -94,5 +94,17 @@ namespace qlsv.Controllers
 
             return Ok(user);
         }
+
+        [HttpPost]
+        [Route("Enroll/{Id}/{ClassId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> EnrollClass(Guid Id, string ClassId)
+        {
+            var result = await _userPublicService.EnrollClass(Id, ClassId);
+
+            if (result.IsSuccessed)
+                return Ok();
+            return BadRequest("Đăng ký không thành công");
+        }
     }
 }

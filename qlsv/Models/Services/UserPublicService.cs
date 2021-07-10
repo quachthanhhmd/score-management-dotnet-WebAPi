@@ -31,6 +31,7 @@ namespace qlsv.Models.Services
         private readonly SignInManager<Users> _signInUser;
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IMarkService _markService;
 
         
         public UserPublicService(
@@ -38,7 +39,8 @@ namespace qlsv.Models.Services
             SignInManager<Users> SignInUser,
             IConfiguration configuration,
             IWebHostEnvironment hostingEnvironment,
-            ApplicationDbContext context
+            ApplicationDbContext context,
+            IMarkService markService
             )
         {
             _userManager = userManager;
@@ -46,6 +48,7 @@ namespace qlsv.Models.Services
             _configuration = configuration;
             _hostingEnvironment = hostingEnvironment;
             _context = context;
+            _markService = markService;
          }
         
         public async Task<Users> GetOneUser(string Id)
@@ -205,7 +208,45 @@ namespace qlsv.Models.Services
         }
 
 
-       
+        public async Task<ApiResult<int>> EnrollClass(Guid Id, string ClassId)
+        {
+            var user = await _userManager.FindByIdAsync(Id.ToString());
+
+            if (user == null)
+                return new ApiErrorResult<int>("Tài khoản không tồn tại");
+
+            var findClass = await _context.Class.FindAsync(ClassId);
+
+            if (findClass == null)
+                return new ApiErrorResult<int>("Lớp học không tồn tại");
+
+            var query = from u in _context.Users
+                        join m in _context.Marks on u.LocalId equals m.localId
+                        select new { u, m };
+
+            query =  query.Where(x => x.u.LocalId == user.LocalId && x.m.SubjectId == ClassId);
+            int totalRow = await query.CountAsync();
+
+            if (totalRow != 0)
+                return new ApiErrorResult<int>("Bạn đã đăng ký lớp này rồi");
+
+
+            var newMark = new CreateMarkRequest
+            {
+                StudentID = user.LocalId,
+                SubjectId = findClass.ClassId,
+
+            };
+
+            var result = await _markService.CreateMark(newMark);
+
+            if (result == 0)
+                return new ApiErrorResult<int>("Đăng ký thất bại, vui lòng thử lại sau.");
+
+
+            return new ApiSuccessResult<int>();
+
+        }
     }
 
    
