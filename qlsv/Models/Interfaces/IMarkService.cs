@@ -22,5 +22,7 @@ namespace qlsv.Models.Interfaces
 
         Task<MarkGPAView> GetTranscript(string StudentId);
         Task<GPAView> GetGPA(string StudentID);
+
+        Task<int> ExportTranscriptToPdf(string studentId);
     }
 }

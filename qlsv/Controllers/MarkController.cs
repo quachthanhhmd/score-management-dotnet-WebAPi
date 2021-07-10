@@ -97,7 +97,7 @@ namespace qlsv.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        [Route("gettranscript/{Id}")]
+        [Route("transcript/{Id}")]
         //Only student with your Id and Admin can get transcripy of THIS student.
         public async Task<IActionResult> GetTranscript(string Id)
         {
@@ -114,7 +114,7 @@ namespace qlsv.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        [Route("getgpa/{Id}")]
+        [Route("gpa/{Id}")]
         //Only student with your Id and Admin can get transcripy of THIS student.
         public async Task<IActionResult> GetGPA(string Id)
         {
@@ -128,5 +128,23 @@ namespace qlsv.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("transcript/pdf/{Id}")]
+        //Only student with your Id and Admin can get transcripy of THIS student.
+        public async Task<IActionResult> ExportTranscriptToPdf(string Id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _markService.ExportTranscriptToPdf(Id);
+
+            if (result == 0)
+                return BadRequest("Get Failed!!");
+
+            return Ok("Xuất file PD thành công. File được lưu dưới dạng mssv.pdf");
+        }
+
     }
 }

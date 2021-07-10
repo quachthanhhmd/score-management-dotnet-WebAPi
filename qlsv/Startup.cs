@@ -56,8 +56,13 @@ namespace qlsv
             services.AddTransient<IClassRoomService, ClassRoomService>();
             services.AddTransient<IDepartmentService, DepartmentService>();
             services.AddTransient<IMarkService, MarkService>();
-    
-            services.AddControllers();
+            services.AddScoped<IViewRenderService, ViewRenderService>();
+
+
+
+
+            services.AddControllersWithViews();
+            services.AddRazorPages();
 
             services.AddSwaggerGen(c =>
             {
