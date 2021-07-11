@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 
 namespace qlsv.Models.Interfaces
 {
-    interface IAccountService
+    public interface IEmailSender
     {
+
+        void SendMail(string toEmail, string subject, string content);
     }
 }

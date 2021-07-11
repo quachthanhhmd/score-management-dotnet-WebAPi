@@ -8,6 +8,6 @@ namespace qlsv.Models.Interfaces
 {
     public interface IViewRenderService
     {
-        Task<string> RenderViewAsync(string viewName, MarkGPAView model);
+        Task<string> RenderViewAsync(string viewName, object model);
     }
 }

@@ -103,5 +103,18 @@ namespace qlsv.Controllers
                 return Ok();
             return BadRequest("Đăng ký không thành công");
         }
+
+        [HttpPost]
+        [Route("recovery")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SendMailRecoveryPassword([FromForm] string email)
+        {
+
+            var result = await _userPublicService.SendTokenToEmail(email);
+            if (result.IsSuccessed)
+                return Ok();
+
+            return BadRequest("Send mail thất bại.");
+        }
     }
 }

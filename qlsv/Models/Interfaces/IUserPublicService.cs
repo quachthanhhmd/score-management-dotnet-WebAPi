@@ -17,5 +17,6 @@ namespace qlsv.Models.Interfaces
         Task<ApiResult<bool>> UpdateUser(Guid Id, UpdateRequest request);
         Task<ApiResult<bool>> DeleteUser(Guid Id);
         Task<ApiResult<int>> EnrollClass(Guid Id, string ClassId);
+        Task<ApiResult<int>> SendTokenToEmail(string email);
     }
 }

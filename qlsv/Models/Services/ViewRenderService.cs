@@ -33,7 +33,7 @@ namespace qlsv.Models.Services
             _razorViewEngine = razorViewEngine; _tempDataProvider = tempDataProvider; _serviceProvider = serviceProvider; _env = env; _http = ctx.HttpContext;
         }
 
-        public async Task<string> RenderViewAsync(string viewName, MarkGPAView model)
+        public async Task<string> RenderViewAsync(string viewName, object model)
         {
             //var actionContext = new ActionContext();
             var httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };

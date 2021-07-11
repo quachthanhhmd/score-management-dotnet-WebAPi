@@ -20,6 +20,7 @@ using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using qlsv.ViewModels.Marks;
+using qlsv.ViewModels.Account;
 
 namespace qlsv.Models.Services
 {
@@ -32,6 +33,8 @@ namespace qlsv.Models.Services
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IMarkService _markService;
+        private readonly IViewRenderService _viewRenderService;
+        private readonly IEmailSender _emailSender;
 
         public UserPublicService(
             UserManager<Users> userManager,
@@ -39,7 +42,9 @@ namespace qlsv.Models.Services
             IConfiguration configuration,
             IWebHostEnvironment hostingEnvironment,
             ApplicationDbContext context,
-            IMarkService markService
+            IMarkService markService,
+            IViewRenderService viewRenderService,
+            IEmailSender emailSender
             )
         {
             _userManager = userManager;
@@ -48,7 +53,9 @@ namespace qlsv.Models.Services
             _hostingEnvironment = hostingEnvironment;
             _context = context;
             _markService = markService;
-           
+            _viewRenderService = viewRenderService;
+            _emailSender = emailSender;
+
         }
         
         public async Task<Users> GetOneUser(string Id)
@@ -247,8 +254,38 @@ namespace qlsv.Models.Services
             return new ApiSuccessResult<int>();
 
         }
-        
-        
+
+        public async Task<ApiResult<int>> SendTokenToEmail(string email)
+        {
+            //Find Email in user
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+                return new ApiSuccessResult<int>();
+
+            //Generate password reset token
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            //build Link reset password
+
+            string domainName = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName;
+
+            var url = new TokenView
+            {
+                Name = user.Name,
+                url = $"{domainName}/forgotpassword/{token}"
+            };
+
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                string content = await _viewRenderService.RenderViewAsync("~/Assets/Client/Template/Mail.cshtml", url);
+
+
+                _emailSender.SendMail(email, "Xác nhận tài khoản", content);
+            }
+            return new ApiSuccessResult<int>();
+        }
     }
 
    

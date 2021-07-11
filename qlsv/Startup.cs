@@ -57,6 +57,8 @@ namespace qlsv
             services.AddTransient<IDepartmentService, DepartmentService>();
             services.AddTransient<IMarkService, MarkService>();
             services.AddScoped<IViewRenderService, ViewRenderService>();
+            services.AddTransient<IEmailSender, EmailSender>();
+            
 
 
 
