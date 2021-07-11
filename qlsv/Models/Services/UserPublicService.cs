@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using qlsv.Models.Interfaces;
-using qlsv.Models;
 using qlsv.Data;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using qlsv.Utilities.Exceptions;
-using qlsv.Models.Enums;
 using qlsv.ViewModels.Common;
 using qlsv.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +17,6 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
-using qlsv.ViewModels.Marks;
 using qlsv.ViewModels.Account;
 
 namespace qlsv.Models.Services
@@ -35,6 +32,7 @@ namespace qlsv.Models.Services
         private readonly IMarkService _markService;
         private readonly IViewRenderService _viewRenderService;
         private readonly IEmailSender _emailSender;
+        private readonly IHttpContextAccessor _contextAccessor;
 
         public UserPublicService(
             UserManager<Users> userManager,
@@ -44,7 +42,8 @@ namespace qlsv.Models.Services
             ApplicationDbContext context,
             IMarkService markService,
             IViewRenderService viewRenderService,
-            IEmailSender emailSender
+            IEmailSender emailSender,
+            IHttpContextAccessor contextAccessor
             )
         {
             _userManager = userManager;
@@ -55,7 +54,7 @@ namespace qlsv.Models.Services
             _markService = markService;
             _viewRenderService = viewRenderService;
             _emailSender = emailSender;
-
+            _contextAccessor = contextAccessor;
         }
         
         public async Task<Users> GetOneUser(string Id)
@@ -268,12 +267,12 @@ namespace qlsv.Models.Services
 
             //build Link reset password
 
-            string domainName = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName;
-
+            string domainName = _contextAccessor.HttpContext.Request.Host.ToString();
+            string scheme = _contextAccessor.HttpContext.Request.Scheme;
             var url = new TokenView
             {
                 Name = user.Name,
-                url = $"{domainName}/forgotpassword/{token}"
+                url = $@"{scheme}://{domainName}/forgotpassword?Id={user.Id}&token={token}"
             };
 
 
@@ -285,6 +284,27 @@ namespace qlsv.Models.Services
                 _emailSender.SendMail(email, "Xác nhận tài khoản", content);
             }
             return new ApiSuccessResult<int>();
+        }
+
+        public async Task<ApiResult<bool>> CheckTokenRecoveryPassword(Guid Id, string token, ResetPasswordRequest request)
+        {
+
+            var user = await _userManager.FindByIdAsync(Id.ToString());
+                
+            
+            if (user == null)
+                return new ApiErrorResult<bool>("user is not correct");
+
+            if (request.Password != request.PasswordConfirm)
+                return new ApiErrorResult<bool>("Password does not Match");
+
+
+            var result = await _userManager.ResetPasswordAsync(user, token, request.Password);
+
+            if (result.Succeeded)
+                return new ApiSuccessResult<bool>();
+
+            return new ApiErrorResult<bool>(result.Errors.ToList().ToString());
         }
     }
 

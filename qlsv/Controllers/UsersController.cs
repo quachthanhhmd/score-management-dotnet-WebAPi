@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using qlsv.ViewModels;
+using qlsv.ViewModels.Account;
 
 namespace qlsv.Controllers
 {
@@ -115,6 +116,23 @@ namespace qlsv.Controllers
                 return Ok();
 
             return BadRequest("Send mail thất bại.");
+        }
+
+        [HttpPost]
+        [Route("resetpassword/")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CheckTokenRecoveryPassword(Guid Id, string token, [FromForm] ResetPasswordRequest request)
+        {
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _userPublicService.CheckTokenRecoveryPassword(Id, token, request);
+
+            if (result.IsSuccessed)
+                return Ok("Cập nhật thành công.");
+
+            return BadRequest(result.Message);
         }
     }
 }

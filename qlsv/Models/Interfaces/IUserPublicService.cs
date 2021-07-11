@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using qlsv.Models;
 using qlsv.ViewModels;
+using qlsv.ViewModels.Account;
 using qlsv.ViewModels.Common;
 
 namespace qlsv.Models.Interfaces
@@ -18,5 +19,6 @@ namespace qlsv.Models.Interfaces
         Task<ApiResult<bool>> DeleteUser(Guid Id);
         Task<ApiResult<int>> EnrollClass(Guid Id, string ClassId);
         Task<ApiResult<int>> SendTokenToEmail(string email);
+        Task<ApiResult<bool>> CheckTokenRecoveryPassword(Guid Id, string token, ResetPasswordRequest request);
     }
 }
