@@ -1,5 +1,6 @@
 ﻿using eShopSolution.ViewModels.Common;
 using qlsv.ViewModels;
+using qlsv.ViewModels.Common;
 using qlsv.ViewModels.Marks;
 using qlsv.ViewModels.Marks.GPA;
 using System;
@@ -26,7 +27,7 @@ namespace qlsv.Models.Interfaces
         
         Task<GPAView> GetGPA(string StudentID);
 
-        Task<int> ExportTranscriptToPdf(string studentId);
+        Task<ApiResult<bool>> ExportTranscriptToPdf(string studentId);
 
         Task<List<MarkViewSemester>> GetMarkInSemester(MarkSemesterRequest request);
     }

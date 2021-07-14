@@ -15,25 +15,21 @@ using Microsoft.AspNetCore.Hosting;
 using IronPdf;
 using Syncfusion.Pdf;
 using System.Text;
+using qlsv.ViewModels.Common;
 
 namespace qlsv.Models.Services
 {
     public class MarkService : IMarkService
     {
         private readonly ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _hostEnvironment;
-        private readonly IViewRenderService _viewRenderService;
-
-
+        private readonly IExportService _exportService;
         public MarkService(
             ApplicationDbContext context,
-            IWebHostEnvironment hostEnvironment,
-            IViewRenderService viewRenderService
+            IExportService exportService
             )
         {
             _context = context;
-            _hostEnvironment = hostEnvironment;
-            _viewRenderService = viewRenderService;
+            _exportService = exportService;
         }
 
         public async Task<Marks> GetMark(string SubjectId, string UserId)
@@ -243,45 +239,14 @@ namespace qlsv.Models.Services
         //<summary>
         //Export Academic transcript to PDF
         //</summary>
-        public async Task<int> ExportTranscriptToPdf(string studentId)
+        public async Task<ApiResult<bool>> ExportTranscriptToPdf(string studentId)
         {
             MarkGPAView data = await this.GetTranscript(studentId);
-
-            //file name
             string fileName = data.StudentId + ".pdf";
-
-            HtmlToPdf converter = new HtmlToPdf();
-
-            //set converter
-            converter.PrintOptions.PaperSize = PdfPrintOptions.PdfPaperSize.A4;
-            //converter.PrintOptions.PaperOrientation = PdfPrintOptions.PdfPaperOrientation.Portrait;
-            converter.PrintOptions.MarginLeft = 20;
-            converter.PrintOptions.MarginTop = 10;
-            converter.PrintOptions.MarginRight = 10;
-            converter.PrintOptions.MarginBottom = 10;
-            converter.PrintOptions.EnableJavaScript = true;
-            converter.PrintOptions.CreatePdfFormsFromHtml = false;
-            //converter.PrintOptions.CssMediaType = PdfPrintOptions.PdfCssMediaType.Screen;
-            converter.PrintOptions.FitToPaperWidth = true;
-          
-            converter.PrintOptions.InputEncoding = Encoding.UTF8;
-            string baseUri = _hostEnvironment.WebRootPath + @"/css/main.css";
-            converter.PrintOptions.CustomCssUrl = baseUri;
-            
+            //file name
 
 
-            var htmlString = await _viewRenderService.RenderViewAsync("~/Views/ViewRender/Index.cshtml", data);
-
-            IronPdf.PdfDocument doc = converter.RenderHtmlAsPdf(htmlString);
-            
-            var res = doc.SaveAs(fileName);
-
-            if (res == null)
-            {
-                return 0;
-            }    
-
-            return 1;
+            return await _exportService.ExportDataToPdf(fileName, data, "~/Views/ViewRender/Index.cshtml");
         }
     }
 }

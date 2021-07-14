@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using qlsv.Data;
 
@@ -164,27 +165,23 @@ namespace qlsv.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<int?>("NumberCredits")
-                        .IsRequired()
+                    b.Property<int>("NumberCredits")
                         .HasColumnType("int");
 
-                    b.Property<int?>("NumberLessons")
-                        .IsRequired()
+                    b.Property<int>("NumberLessons")
                         .HasColumnType("int");
 
                     b.Property<string>("RoomId")
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<int?>("Semester")
-                        .IsRequired()
+                    b.Property<int>("Semester")
                         .HasColumnType("int");
 
                     b.Property<string>("TeacherId")
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int?>("Year")
-                        .IsRequired()
+                    b.Property<int>("Year")
                         .HasColumnType("int");
 
                     b.HasKey("ClassId")
@@ -264,6 +261,42 @@ namespace qlsv.Migrations
                     b.HasIndex("SubjectId", "localId");
 
                     b.ToTable("Marks");
+                });
+
+            modelBuilder.Entity("qlsv.Models.TestSchedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClassId")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<TimeSpan>("ExamHour")
+                        .HasColumnType("TIME");
+
+                    b.Property<DateTime>("ExamTime")
+                        .HasColumnType("DATE");
+
+                    b.Property<string>("RoomId")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("SupervisorName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id")
+                        .HasName("PK_TestSchedule");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("TestSchedule");
                 });
 
             modelBuilder.Entity("qlsv.Models.Users", b =>
@@ -462,6 +495,21 @@ namespace qlsv.Migrations
                         .HasPrincipalKey("LocalId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("qlsv.Models.TestSchedule", b =>
+                {
+                    b.HasOne("qlsv.Models.Class", null)
+                        .WithMany()
+                        .HasForeignKey("ClassId")
+                        .HasConstraintName("Fk_TestSchedule_class")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("qlsv.Models.ClassRoom", null)
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .HasConstraintName("Fk_TestSchedule_Room");
                 });
 #pragma warning restore 612, 618
         }

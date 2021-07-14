@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace qlsv.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -292,6 +292,36 @@ namespace qlsv.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "TestSchedule",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ClassId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    ExamTime = table.Column<DateTime>(type: "DATE", nullable: false),
+                    SupervisorName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ExamHour = table.Column<TimeSpan>(type: "TIME", nullable: false),
+                    RoomId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TestSchedule", x => x.Id);
+                    table.ForeignKey(
+                        name: "Fk_TestSchedule_class",
+                        column: x => x.ClassId,
+                        principalTable: "Class",
+                        principalColumn: "ClassId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "Fk_TestSchedule_Room",
+                        column: x => x.RoomId,
+                        principalTable: "classRoom",
+                        principalColumn: "RoomId",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -369,6 +399,16 @@ namespace qlsv.Migrations
                 name: "IX_Marks_SubjectId_localId",
                 table: "Marks",
                 columns: new[] { "SubjectId", "localId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TestSchedule_ClassId",
+                table: "TestSchedule",
+                column: "ClassId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TestSchedule_RoomId",
+                table: "TestSchedule",
+                column: "RoomId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -390,6 +430,9 @@ namespace qlsv.Migrations
 
             migrationBuilder.DropTable(
                 name: "Marks");
+
+            migrationBuilder.DropTable(
+                name: "TestSchedule");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

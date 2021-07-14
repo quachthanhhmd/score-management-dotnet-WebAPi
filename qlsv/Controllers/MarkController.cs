@@ -140,7 +140,7 @@ namespace qlsv.Controllers
 
             var result = await _markService.ExportTranscriptToPdf(Id);
 
-            if (result == 0)
+            if (!result.IsSuccessed)
                 return BadRequest("Get Failed!!");
 
             return Ok("Xuất file PD thành công. File được lưu dưới dạng mssv.pdf");

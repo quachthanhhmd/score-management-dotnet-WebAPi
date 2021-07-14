@@ -25,12 +25,19 @@ namespace qlsv.Models.Services
         private readonly IRazorViewEngine _razorViewEngine;
         private readonly ITempDataProvider _tempDataProvider;
         private readonly IServiceProvider _serviceProvider;
-        private readonly IHostingEnvironment _env;
+        
         private readonly HttpContext _http;
 
-        public ViewRenderService(IRazorViewEngine razorViewEngine, ITempDataProvider tempDataProvider, IServiceProvider serviceProvider, IHostingEnvironment env, IHttpContextAccessor ctx)
+        public ViewRenderService(
+            IRazorViewEngine razorViewEngine, 
+            ITempDataProvider tempDataProvider, 
+            IServiceProvider serviceProvider,  
+            IHttpContextAccessor ctx)
         {
-            _razorViewEngine = razorViewEngine; _tempDataProvider = tempDataProvider; _serviceProvider = serviceProvider; _env = env; _http = ctx.HttpContext;
+            _razorViewEngine = razorViewEngine;
+            _tempDataProvider = tempDataProvider;
+            _serviceProvider = serviceProvider;  
+            _http = ctx.HttpContext;
         }
 
         public async Task<string> RenderViewAsync(string viewName, object model)

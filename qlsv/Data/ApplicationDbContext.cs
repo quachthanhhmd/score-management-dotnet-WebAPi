@@ -26,11 +26,12 @@ namespace qlsv.Data
             modelBuilder.Entity<Class>().ToTable("Class");
             modelBuilder.Entity<Departments>().ToTable("Departments");
             modelBuilder.Entity<Marks>().ToTable("Marks");
+            modelBuilder.Entity<TestSchedule>().ToTable("TestSchedule");
             modelBuilder.Entity<AppRole>().ToTable("AppRole");
 
             // Configure Primary Users  
             modelBuilder.Entity<Users>().HasKey(ug => ug.Id).HasName("PK_StudentId");
-    
+            modelBuilder.Entity<TestSchedule>().HasKey(u => u.Id).HasName("PK_TestSchedule");
             modelBuilder.Entity<Marks>().HasKey(u => new { u.SubjectId, u.localId }).HasName("PK_Mark");
             modelBuilder.Entity<Departments>().HasKey(u => u.DepartmentId).HasName("PK_Department");
             modelBuilder.Entity<Class>().HasKey(u => u.ClassId).HasName("PK_Class");
@@ -55,12 +56,20 @@ namespace qlsv.Data
                 
 
 
-           
+            modelBuilder.Entity<TestSchedule>().Property(u => u.ClassId).HasColumnType("nvarchar(30)").HasMaxLength(30).IsRequired();
+            modelBuilder.Entity<TestSchedule>().Property(u => u.ExamHour).HasColumnType("TIME");
+            modelBuilder.Entity<TestSchedule>().Property(u => u.ExamTime).HasColumnType("DATE");
+            modelBuilder.Entity<TestSchedule>().Property(u => u.SupervisorName).HasColumnType("nvarchar(100)").HasMaxLength(100);
+            modelBuilder.Entity<TestSchedule>().Property(u => u.RoomId).HasColumnType("nvarchar(30)").HasMaxLength(30);
+            modelBuilder.Entity<TestSchedule>().Property(u => u.Id).UseMySqlIdentityColumn();
+
+
             modelBuilder.Entity<Class>().Property(u => u.NumberLessons).HasColumnType("int").IsRequired();
             modelBuilder.Entity<Class>().Property(u => u.NumberCredits).HasColumnType("int").IsRequired();
             modelBuilder.Entity<Class>().Property(u => u.Year).HasColumnType("int").IsRequired();
             modelBuilder.Entity<Class>().Property(u => u.Semester).HasColumnType("int").IsRequired();
             modelBuilder.Entity<Class>().Property(u => u.DepartmentId).HasColumnType("nvarchar(30)").HasMaxLength(30);
+           
 
             modelBuilder.Entity<Class>().Property(u => u.ClassId).HasColumnType("nvarchar(30)").HasMaxLength(30).IsRequired();
             modelBuilder.Entity<Class>().Property(u => u.ClassName).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
@@ -92,6 +101,9 @@ namespace qlsv.Data
 
             modelBuilder.Entity<Class>().HasOne<Departments>().WithMany().HasForeignKey(u => u.DepartmentId).HasConstraintName("FK_Subject_Deparment");
 
+            modelBuilder.Entity<TestSchedule>().HasOne<Class>().WithMany().HasForeignKey(u => u.ClassId).HasConstraintName("Fk_TestSchedule_class");
+            modelBuilder.Entity<TestSchedule>().HasOne<ClassRoom>().WithMany().HasForeignKey(u => u.RoomId).HasConstraintName("Fk_TestSchedule_Room");
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -101,6 +113,7 @@ namespace qlsv.Data
         public DbSet<Departments> Departments { get; set; }
   
         public DbSet<Marks> Marks { get; set; }
+        public DbSet<TestSchedule> TestSchedule { get; set; }
     }
 
 }
