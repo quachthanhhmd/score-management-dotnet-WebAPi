@@ -18,6 +18,8 @@ using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using qlsv.ViewModels.Account;
+using qlsv.ViewModels.Users;
+using eShopSolution.ViewModels.Common;
 
 namespace qlsv.Models.Services
 {
@@ -305,6 +307,50 @@ namespace qlsv.Models.Services
                 return new ApiSuccessResult<bool>();
 
             return new ApiErrorResult<bool>(result.Errors.ToList().ToString());
+        }
+
+        public async  Task<ApiResult<PageResult<UserPagingView>>> GetPaging(UserPagingRequest request)
+        {
+            var query = from u in _context.Users
+                        select new { u };
+
+            query = query.Where(x => x.u.Name.Contains(request.Keyword)
+                                || x.u.Email.Contains(request.Keyword)
+                                || x.u.LocalId.Contains(request.Keyword));
+
+            int totalRow = await query.CountAsync();
+
+            if (totalRow == 0)
+                return new ApiErrorResult<PageResult<UserPagingView>> ("Không có kết quả tìm kiếm");
+
+            var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+                            .Take(request.PageSize)
+                            .Select(x => new UserPagingView()
+                            {
+                                LocalId = x.u.LocalId,
+                                Name = x.u.Name,
+                                Address = x.u.Address,
+                                Age = x.u.Age,
+                                Dob = x.u.Dob,
+                                Gender = x.u.Gender,
+                                PhotoPath = x.u.PhotoPath
+                            }).ToListAsync();
+
+            var pagedResult = new PageResult<UserPagingView>()
+            {
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
+                Items = data,
+                TotalRecords = totalRow,
+            };
+
+
+            return new ApiSuccessResult<PageResult<UserPagingView>>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = pagedResult
+            };
         }
     }
 

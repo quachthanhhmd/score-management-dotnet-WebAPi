@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using eShopSolution.ViewModels.Common;
 using qlsv.Models;
 using qlsv.ViewModels;
 using qlsv.ViewModels.Account;
 using qlsv.ViewModels.Common;
+using qlsv.ViewModels.Users;
 
 namespace qlsv.Models.Interfaces
 {
@@ -20,5 +22,7 @@ namespace qlsv.Models.Interfaces
         Task<ApiResult<int>> EnrollClass(Guid Id, string ClassId);
         Task<ApiResult<int>> SendTokenToEmail(string email);
         Task<ApiResult<bool>> CheckTokenRecoveryPassword(Guid Id, string token, ResetPasswordRequest request);
+        Task<ApiResult<PageResult<UserPagingView>>> GetPaging(UserPagingRequest request);
+
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using qlsv.ViewModels;
 using qlsv.ViewModels.Account;
+using qlsv.ViewModels.Users;
 
 namespace qlsv.Controllers
 {
@@ -85,6 +86,8 @@ namespace qlsv.Controllers
                 return BadRequest(result);
             return Ok(result);
         }
+
+
         [HttpGet]
         [Route("{Id}")]
         public async Task<IActionResult> GetOneUser(string Id)
@@ -92,6 +95,21 @@ namespace qlsv.Controllers
             var user = await _userPublicService.GetOneUser(Id);
 
             return Ok(user);
+        }
+
+        [HttpGet]
+        [Route("")]
+        public async Task<IActionResult> GetPagingUser([FromQuery] UserPagingRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _userPublicService.GetPaging(request);
+
+            if (!result.IsSuccessed)
+                return BadRequest(result.Message);
+
+            return Ok(result);
         }
 
         [HttpPost]
