@@ -20,6 +20,6 @@ git clone https://github.com/quachthanhhmd/score-management-dotnet-WebAPi.git
 - **SQL database**: [MySql](https://www.mysql.com).
 - **Entity Framework Core**: using [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/) to build database.
 - **Authentication and authorization**: using [Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-5.0&tabs=visual-studio)
-- **Validation**: request data validation using [fluent](https://fluentvalidation.net/)/
-- **Error handling**: centralized error handling mechanism/
+- **Validation**: request data validation using [fluent](https://fluentvalidation.net/).
+- **Error handling**: centralized error handling mechanism.
 - **API documentation**: using [swagger](https://swagger.io/) for Asp.Net core.
