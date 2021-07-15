@@ -320,8 +320,6 @@ namespace qlsv.Models.Services
 
             int totalRow = await query.CountAsync();
 
-            if (totalRow == 0)
-                return new ApiErrorResult<PageResult<UserPagingView>> ("Không có kết quả tìm kiếm");
 
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
                             .Take(request.PageSize)

@@ -24,12 +24,12 @@ namespace qlsv.Models.Services
             _context = context;
         }
 
-        public async Task<int> CreateClassRoom(CreateClassRoomRequest request)
+        public async Task<ApiResult<ClassRoom>> CreateClassRoom(CreateClassRoomRequest request)
         {
             var classRoom = await _context.classRoom.FindAsync(request.RoomID);
 
             if (classRoom != null)
-                throw new QLSVException("ClassRoom has existed");
+                return new ApiErrorResult<ClassRoom>("Lớp học không tồn tại.");
 
             var newClassRoom = new ClassRoom()
             {
@@ -38,17 +38,27 @@ namespace qlsv.Models.Services
                 Seats = request.Seats
             };
 
-            var result = await _context.AddAsync(newClassRoom);
+            await _context.AddAsync(newClassRoom);
 
-            return await _context.SaveChangesAsync();
+            var result =  await _context.SaveChangesAsync();
+
+            if (result == 0)
+                return new ApiErrorResult<ClassRoom>("Tạo lớp học thất bại.");
+
+            return new ApiSuccessResult<ClassRoom>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = newClassRoom
+            };
         }
 
-        public async Task<ClassRoom> UpdateClassRoom(string Id, CreateClassRoomRequest request)
+        public async Task<ApiResult<ClassRoom>> UpdateClassRoom(string Id, CreateClassRoomRequest request)
         {
             var classRoom = await _context.classRoom.FindAsync(Id);
 
             if (classRoom == null)
-                throw new QLSVException("ClassRoom not found");
+                return new ApiErrorResult<ClassRoom>("ClassRoom not found");
 
             classRoom.RoomId = (request.RoomID != null) ? request.RoomID : classRoom.RoomId;
             classRoom.Desks = (request.Desks != null) ? request.Desks : classRoom.Desks;
@@ -58,36 +68,55 @@ namespace qlsv.Models.Services
             _context.classRoom.Update(classRoom);
             var result = await _context.SaveChangesAsync();
             if (result == 0)
-                throw new QLSVException("Update ClassRoom does not success");
+                return new ApiErrorResult<ClassRoom>("Update ClassRoom does not success");
 
-            return classRoom;
+            return new ApiSuccessResult<ClassRoom>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = classRoom
+            };
 
         }
 
-        public async Task<int> DeleteClassRoom(string Id)
+        public async Task<ApiResult<bool>> DeleteClassRoom(string Id)
         {
             var classRoom = await _context.classRoom.FindAsync(Id);
 
             if (classRoom == null)
-                throw new QLSVException("ClassRoom not found");
+                return new ApiErrorResult<bool>("ClassRoom not found");
 
             _context.classRoom.Remove(classRoom);
 
-            return await _context.SaveChangesAsync();
 
+            var result = await _context.SaveChangesAsync();
+
+            if (result == 0)
+                return new ApiErrorResult<bool>("Delete Failed");
+
+            return new ApiSuccessResult<bool>()
+            {
+                IsSuccessed = true,
+                Message = "Success"
+            };
         }
 
-        public async Task<ClassRoom> GetClassRoom(string Id)
+        public async Task<ApiResult<ClassRoom>> GetClassRoom(string Id)
         {
             var classRoom = await _context.classRoom.FindAsync(Id);
 
             if (classRoom == null)
-                throw new QLSVException("ClassRoom not found");
+                return new ApiErrorResult<ClassRoom>("ClassRoom not found");
 
-            return classRoom;
+            return new ApiSuccessResult<ClassRoom>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = classRoom
+            };
         }
 
-       public async Task<PageResult<ClassRoom>> GetPagingClasRoom(PagingClassRequest request)
+       public async Task<ApiResult<PageResult<ClassRoom>>> GetPagingClasRoom(PagingClassRequest request)
        {
             var query = from clr in _context.classRoom
                         select new { clr };
@@ -130,7 +159,12 @@ namespace qlsv.Models.Services
                 Items = data
             };
 
-            return pagedResult;
+            return new ApiSuccessResult<PageResult<ClassRoom>>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = pagedResult
+            };
         }
     }
 }

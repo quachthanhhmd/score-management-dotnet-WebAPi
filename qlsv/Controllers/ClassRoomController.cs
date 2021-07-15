@@ -32,10 +32,10 @@ namespace qlsv.Controllers
 
             var result = await _classRoomService.CreateClassRoom(request);
 
-            if (result == 0)
-                return BadRequest();
+            if (!result.IsSuccessed)
+                return BadRequest(result);
 
-            return Ok();
+            return Ok(result);
         }
 
         [HttpPut]
@@ -47,8 +47,8 @@ namespace qlsv.Controllers
 
             var result = await _classRoomService.UpdateClassRoom(Id, request);
 
-            if (result == null)
-                return BadRequest();
+            if (!result.IsSuccessed)
+                return BadRequest(result);
 
             return Ok(result);
         }
@@ -63,9 +63,9 @@ namespace qlsv.Controllers
 
             var result = await _classRoomService.DeleteClassRoom(Id);
 
-            if (result == 0)
-                return BadRequest();
-
+            if (!result.IsSuccessed)
+                return BadRequest(result);
+            
             return Ok(result);
         }
 
@@ -78,8 +78,8 @@ namespace qlsv.Controllers
 
             var result = await _classRoomService.GetClassRoom(Id);
 
-            if (result == null)
-                return BadRequest("Class Room not found");
+            if (!result.IsSuccessed)
+                return BadRequest(result);
             return Ok(result);
         }
 
@@ -92,8 +92,8 @@ namespace qlsv.Controllers
 
             var result = await _classRoomService.GetPagingClasRoom(request);
 
-            if (result == null)
-                return BadRequest("Classroom not found");
+            if (!result.IsSuccessed)
+                return BadRequest(result);
 
             return Ok(result);
         }
@@ -107,10 +107,10 @@ namespace qlsv.Controllers
 
             var result = await _classRoomService.DeleteClassRoom(Id);
 
-            if (result == 0)
-                return BadRequest("Delete Does not success");
+            if (!result.IsSuccessed)
+                return BadRequest(result);
 
-            return Ok();
+            return Ok(result);
         }
     }
 }

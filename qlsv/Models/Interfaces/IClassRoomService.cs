@@ -11,11 +11,11 @@ namespace qlsv.Models.Interfaces
     public interface IClassRoomService
     {
 
-        Task<int> CreateClassRoom(CreateClassRoomRequest request);
-        Task<ClassRoom> UpdateClassRoom(string Id, CreateClassRoomRequest request);
-        Task<int> DeleteClassRoom(string Id);
-        Task<ClassRoom> GetClassRoom(string Id);
-        Task<PageResult<ClassRoom>> GetPagingClasRoom(PagingClassRequest request);
+        Task<ApiResult<ClassRoom>> CreateClassRoom(CreateClassRoomRequest request);
+        Task<ApiResult<ClassRoom>> UpdateClassRoom(string Id, CreateClassRoomRequest request);
+        Task<ApiResult<bool>> DeleteClassRoom(string Id);
+        Task<ApiResult<ClassRoom>> GetClassRoom(string Id);
+        Task<ApiResult<PageResult<ClassRoom>>> GetPagingClasRoom(PagingClassRequest request);
 
     }
 }
