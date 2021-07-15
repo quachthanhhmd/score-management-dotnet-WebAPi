@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\ViewRender\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 

@@ -40,7 +40,7 @@
             <p> Mã số sinh viên: @Model.StudentId</p>
         </div>
         <div class="info_person float-right">
-            <p> Ngày sinh: @Model.Dob</p>
+            <p> Ngày sinh: @Model.Dob.ToShortDateString()</p>
             <p> Địa chỉ: @Model.Address</p>
         </div>
     </div>

@@ -246,7 +246,7 @@ namespace qlsv.Models.Services
             //file name
 
 
-            return await _exportService.ExportDataToPdf(fileName, data, "~/Views/ViewRender/Index.cshtml");
+            return await _exportService.ExportDataToPdf(fileName, data, "~/Assets/Client/Template/PdfExport.cshtml");
         }
     }
 }
