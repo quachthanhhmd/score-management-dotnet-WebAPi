@@ -16,7 +16,7 @@ namespace qlsv.Models.Interfaces
 
         Task<ApiResult<bool>> RemoveTestSchedule(int Id);
         Task<ApiResult<TestSchedule>> GetOne(int Id);
-        Task<ApiResult<bool>> ExportScheduleToXLXS(SemesterInYearRequest request, TestScheduleExportBase inforExport);
+        Task<ApiResult<bool>> ExportScheduleToXLXS(string fileName, SemesterInYearRequest request, TestScheduleExportBase inforExport);
 
 
 

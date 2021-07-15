@@ -90,7 +90,7 @@ namespace qlsv.Controllers
 
       
 
-            var result = await _testScheduleService.ExportScheduleToXLXS(request, inforExport);
+            var result = await _testScheduleService.ExportScheduleToXLXS(fileName, request, inforExport);
 
             if (result.IsSuccessed)
                 return Ok(result);

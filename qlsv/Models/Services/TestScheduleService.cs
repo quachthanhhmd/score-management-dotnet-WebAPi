@@ -149,7 +149,7 @@ namespace qlsv.Models.Services
 
         }
 
-        public async Task<ApiResult<bool>> ExportScheduleToXLXS(SemesterInYearRequest request, TestScheduleExportBase inforExport)
+        public async Task<ApiResult<bool>> ExportScheduleToXLXS(string fileName, SemesterInYearRequest request, TestScheduleExportBase inforExport)
         {
             var query = from t in _context.TestSchedule
                         join c in _context.Class on t.ClassId equals c.ClassId
@@ -184,7 +184,7 @@ namespace qlsv.Models.Services
             
             var testSchedule = new TestScheduleView<TestScheduleClassView>(inforExport);
             testSchedule.ScheduleTime = data;
-            await _exportService.ExportDataToXlSX("Sample.xlsx", testSchedule);
+            await _exportService.ExportDataToXlSX(fileName, testSchedule);
             return  new ApiSuccessResult<bool>()
             {
                 IsSuccessed = true,

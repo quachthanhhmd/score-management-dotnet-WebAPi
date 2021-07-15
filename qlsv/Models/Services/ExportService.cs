@@ -73,6 +73,7 @@ namespace qlsv.Models.Services
 
         public Task ExportDataToXlSX(string fileName, TestScheduleView<TestScheduleClassView> data)
         {
+            fileName += ".xlsx";
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             return Task.Run(() => {
                 using (ExcelPackage pck = new ExcelPackage())
