@@ -53,7 +53,7 @@ namespace qlsv.Controllers
 
             var result = await _classService.UpdateClass(Id, request);
 
-            if (result == null)
+            if (!result.IsSuccessed)
             {
                 return BadRequest(result);
             }
@@ -87,7 +87,7 @@ namespace qlsv.Controllers
 
             var result = await _classService.DeleteClass(Id);
 
-            if (result == null)
+            if (!result.IsSuccessed)
             {
                 return BadRequest(result);
             }

@@ -47,7 +47,7 @@ namespace qlsv.Models.Services
             return new ApiSuccessResult<bool>();
         }
 
-        public async Task<Class> UpdateClass(string Id, UpdateClassRequest request)
+        public async Task<ApiResult<Class>> UpdateClass(string Id, UpdateClassRequest request)
         {
             var findClass = await _context.Class.FindAsync(Id);
             if (findClass == null)
@@ -67,19 +67,33 @@ namespace qlsv.Models.Services
 
 
             _context.Class.Update(findClass);
-            await _context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync();
 
-            return findClass;
+            if (result == 0)
+                return new ApiErrorResult<Class>("Update fail!!");
+
+
+            return new ApiSuccessResult<Class>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = findClass
+            };
         }
 
-        public async Task<Class> GetClass(string Id)
+        public async Task<ApiResult<Class>> GetClass(string Id)
         {
             var findClass = await _context.Class.FindAsync(Id);
 
             if (findClass == null)
-                throw new QLSVException("Class not found");
+                return new ApiErrorResult<Class>("Class not found.");
 
-            return findClass;
+            return new ApiSuccessResult<Class>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = findClass
+            };
         }
 
         public async Task<ApiResult<bool>> DeleteClass(string Id)
@@ -90,11 +104,19 @@ namespace qlsv.Models.Services
             if (findClass == null)
                 return new ApiErrorResult<bool>("Class not found");
 
-            var result =  _context.Class.Remove(findClass);
+             _context.Class.Remove(findClass);
 
-            await _context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync();
 
-            return new ApiSuccessResult<bool>();
+            if (result == 0)
+                return new ApiErrorResult<bool>("Update fail!!");
+
+
+            return new ApiSuccessResult<bool>()
+            {
+                IsSuccessed = true,
+                Message = "Success"
+            };
         }
     }
 }
