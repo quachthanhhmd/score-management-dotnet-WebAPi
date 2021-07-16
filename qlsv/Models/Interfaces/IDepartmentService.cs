@@ -1,4 +1,5 @@
 ﻿using eShopSolution.ViewModels.Common;
+using qlsv.ViewModels.Common;
 using qlsv.ViewModels.Departments;
 using System;
 using System.Collections.Generic;
@@ -9,12 +10,12 @@ namespace qlsv.Models.Interfaces
 {
     public interface IDepartmentService
     {
-        Task<Departments> GetDepartment(string Id);
-        Task<int> CreateDepartment(CreateDepartmentRequest request);
-        Task<Departments> UpdateDepartment(string Id, UpdateDepartmentRequest request);
-        Task<int> DeleteDepartment(string Id);
+        Task<ApiResult<Departments>> GetDepartment(string Id);
+        Task<ApiResult<Departments>> CreateDepartment(CreateDepartmentRequest request);
+        Task<ApiResult<Departments>> UpdateDepartment(string Id, UpdateDepartmentRequest request);
+        Task<ApiResult<bool>> DeleteDepartment(string Id);
 
-        Task<PageResult<DepartmentViewPaging>> GetPagingDepartment(PagingDepartmentRequest request);
+        Task<ApiResult<PageResult<DepartmentViewPaging>>> GetPagingDepartment(PagingDepartmentRequest request);
 
     }
 }

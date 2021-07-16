@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using qlsv.Data;
 using qlsv.Models.Interfaces;
 using qlsv.Utilities.Exceptions;
+using qlsv.ViewModels.Common;
 using qlsv.ViewModels.Departments;
 using System;
 using System.Collections.Generic;
@@ -24,21 +25,26 @@ namespace qlsv.Models.Services
         }
 
 
-        public async Task<Departments> GetDepartment(string Id)
+        public async Task<ApiResult<Departments>> GetDepartment(string Id)
         {
             var department = await _context.Departments.FindAsync(Id);
 
             if (department == null)
-                throw new QLSVException("Department not found");
+                return new ApiErrorResult<Departments>("Department not found");
 
-            return department;
+            return new ApiSuccessResult<Departments>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = department
+            };
         }
 
         //<summary>
         //<c><b>Input: </b> CreateDepartmentRequest</c>
         //<c><b>Output: </b> (int) = 0 if unsuccess and >0 if success</c>
         //</summary>
-        public async Task<int> CreateDepartment(CreateDepartmentRequest request)
+        public async Task<ApiResult<Departments>> CreateDepartment(CreateDepartmentRequest request)
         {
             var department = await _context.Departments.FindAsync(request.DepartmentId);
 
@@ -53,19 +59,31 @@ namespace qlsv.Models.Services
             };
 
             await _context.Departments.AddAsync(newDepartment);
-            return await _context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync();
+
+
+            if (result == 0)
+                return new ApiErrorResult<Departments>("Create fail!!");
+
+            return new ApiSuccessResult<Departments>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = newDepartment
+            };
+
         }
 
         //<summary>
         //<c><b>Input: </b> UpdateDepartmentRequest</c>
         //<c><b>Output: </b> Departments</c>
         //</summary>
-        public async Task<Departments> UpdateDepartment(string Id, UpdateDepartmentRequest request)
+        public async Task<ApiResult<Departments>> UpdateDepartment(string Id, UpdateDepartmentRequest request)
         {
             var department = await _context.Departments.FindAsync(Id);
 
             if (department == null)
-                throw new QLSVException("Department not found");
+                return new ApiErrorResult<Departments>("Department not found.");
 
 
             department.DepartmentId = (request.DepartmentId != null) ? request.DepartmentId : department.DepartmentId;
@@ -76,40 +94,53 @@ namespace qlsv.Models.Services
             var result = await _context.SaveChangesAsync();
 
             if (result == 0)
-                throw new QLSVException("Update unsuccessfully");
+                return new ApiErrorResult<Departments>("Update unsuccessfully");
 
-            return department;
+            return new ApiSuccessResult<Departments>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = department
+            };
         }
 
         //<summary>
         //<c><b>Input: </b> Department Id</c>
         //<c><b>Output: </b> (int) = 0 if unsuccess and > 0 if success</c>
         //</summary>
-        public async Task<int> DeleteDepartment(string Id)
+        public async Task<ApiResult<bool>> DeleteDepartment(string Id)
         {
             var department = await _context.Departments.FindAsync(Id);
 
             if (department == null)
-                throw new QLSVException("Department not found");
+                return new ApiErrorResult<bool>("Department not found");
 
             _context.Departments.Remove(department);
-            return await _context.SaveChangesAsync();
+            var result =  await _context.SaveChangesAsync();
 
+            if (result == 0)
+                return new ApiErrorResult<bool>("Delete unsuccessfully");
+
+            return new ApiSuccessResult<bool>()
+            {
+                IsSuccessed = true,
+                Message = "Success"
+            };
         }
 
-        public async Task<PageResult<DepartmentViewPaging>> GetPagingDepartment(PagingDepartmentRequest request)
+        public async Task<ApiResult<PageResult<DepartmentViewPaging>>> GetPagingDepartment(PagingDepartmentRequest request)
         {
 
 
             var query = from d in _context.Departments
                         join u in _context.Users on d.LeaderId equals u.Id into subID
                         from k in subID.DefaultIfEmpty()
-                        select new { d, u = k};
+                        select new { d, u = k };
 
             //filter
             if (!string.IsNullOrEmpty(request.LeaderName))
             {
-                
+
 
                 query = query.Where(x => x.u.Name == request.LeaderName);
             }
@@ -133,8 +164,13 @@ namespace qlsv.Models.Services
                 PageIndex = request.PageIndex,
                 Items = data
             };
-            return pagedResult;
 
+            return new ApiSuccessResult<PageResult<DepartmentViewPaging>>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = pagedResult
+            };
         }
 
     }

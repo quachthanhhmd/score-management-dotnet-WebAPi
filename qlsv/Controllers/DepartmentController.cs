@@ -32,8 +32,8 @@ namespace qlsv.Controllers
 
             var result = await _departmentService.GetDepartment(Id);
 
-            if (result == null)
-                return BadRequest("Get Failed");
+            if (!result.IsSuccessed)
+                return BadRequest(result);
 
             return Ok(result);
         }
@@ -47,8 +47,8 @@ namespace qlsv.Controllers
 
             var result = await _departmentService.GetPagingDepartment(request);
 
-            if (result == null)
-                return BadRequest("Get Failed");
+            if (!result.IsSuccessed)
+                return BadRequest(result);
 
             return Ok(result);
         }
@@ -62,10 +62,10 @@ namespace qlsv.Controllers
 
             var result = await _departmentService.CreateDepartment(request);
 
-            if (result == 0)
-                return BadRequest("Create Failed");
+            if (!result.IsSuccessed)
+                return BadRequest(result);
 
-            return Ok();
+            return Ok(result);
         }
 
         [HttpPut]
@@ -77,8 +77,8 @@ namespace qlsv.Controllers
 
             var result = await _departmentService.UpdateDepartment(Id, request);
 
-            if (result == null)
-                return BadRequest("Update Failed");
+            if (!result.IsSuccessed)
+                return BadRequest(result);
 
             return Ok(result);
         }
@@ -92,8 +92,8 @@ namespace qlsv.Controllers
 
             var result = await _departmentService.DeleteDepartment(Id);
 
-            if (result == 0)
-                return BadRequest("Update Failed");
+            if (!result.IsSuccessed)
+                return BadRequest(result);
 
             return Ok(result);
         }
