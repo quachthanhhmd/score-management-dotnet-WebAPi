@@ -60,10 +60,10 @@ namespace qlsv.Controllers
 
             var result = await _markService.CreateMark(request);
 
-            if (result == 0)
-                return BadRequest("Create Unsucessfully");
+            if (!result.IsSuccessed)
+                return BadRequest(result);
 
-            return Ok();
+            return Ok(result);
         }
 
         [HttpPut]
@@ -75,8 +75,8 @@ namespace qlsv.Controllers
                 return BadRequest(ModelState);
             var result = await _markService.UpdateMark(ClassId, UserId, request);
 
-            if (result == null)
-                return BadRequest("Update Unsucessfully");
+            if (!result.IsSuccessed)
+                return BadRequest(result);
 
             return Ok(result);
         }
@@ -89,10 +89,10 @@ namespace qlsv.Controllers
                 return BadRequest(ModelState);
             var result = await _markService.DeleteMark(ClassId, UserId);
 
-            if (result == 0)
-                return BadRequest("Delete Unsucessfully");
+            if (!result.IsSuccessed)
+                return BadRequest(result);
 
-            return Ok();
+            return Ok(result);
         }
 
         [HttpGet]
@@ -106,8 +106,8 @@ namespace qlsv.Controllers
 
             var result = await _markService.GetTranscript(Id);
 
-            if (result == null)
-                return BadRequest("Get Failed!!");
+            if (!result.IsSuccessed)
+                return BadRequest(result);
 
             return Ok(result);
         }
@@ -123,8 +123,8 @@ namespace qlsv.Controllers
 
             var result = await _markService.GetGPA(Id);
 
-            if (result == null)
-                return BadRequest("Get Failed!!");
+            if (!result.IsSuccessed)
+                return BadRequest(result);
 
             return Ok(result);
         }
@@ -141,9 +141,9 @@ namespace qlsv.Controllers
             var result = await _markService.ExportTranscriptToPdf(Id);
 
             if (!result.IsSuccessed)
-                return BadRequest("Get Failed!!");
+                return BadRequest(result);
 
-            return Ok("Xuất file PD thành công. File được lưu dưới dạng mssv.pdf");
+            return Ok(result);
         }
 
 
@@ -159,8 +159,8 @@ namespace qlsv.Controllers
 
             var result = await _markService.GetMarkInSemester(request);
 
-            if (result == null)
-                return BadRequest("Get Failed!!");
+            if (!result.IsSuccessed)
+                return BadRequest(result);
 
             return Ok(result);
         }

@@ -32,18 +32,23 @@ namespace qlsv.Models.Services
             _exportService = exportService;
         }
 
-        public async Task<Marks> GetMark(string SubjectId, string UserId)
+        public async Task<ApiResult<Marks>> GetMark(string SubjectId, string UserId)
         {
 
             var mark = await _context.Marks.FindAsync( SubjectId, UserId);
 
             if (mark == null)
-                throw new QLSVException("Mark not found");
+                return new ApiErrorResult<Marks>("Mark not found");
 
-            return mark;
+            return new ApiSuccessResult<Marks>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = mark
+            };
         }
 
-        public async Task<int> CreateMark(CreateMarkRequest request)
+        public async Task<ApiResult<Marks>> CreateMark(CreateMarkRequest request)
         {
             var mark = await _context.Marks.FindAsync(request.SubjectId, request.StudentID );
 
@@ -58,15 +63,25 @@ namespace qlsv.Models.Services
             };
 
             await _context.Marks.AddAsync(newMark);
-            return await _context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync();
+
+            if (result == 0)
+                return new ApiErrorResult<Marks>("Create Failed");
+
+            return new ApiSuccessResult<Marks>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = newMark
+            };
         }
 
-        public async Task<Marks> UpdateMark(string SubjectId, string UserId, UpdateMarkRequest request)
+        public async Task<ApiResult<Marks>> UpdateMark(string SubjectId, string UserId, UpdateMarkRequest request)
         {
             var mark = await _context.Marks.FindAsync( request.SubjectId, request.UserId );
 
             if (mark == null)
-                throw new QLSVException("Mark not found");
+                return new ApiErrorResult<Marks>("Mark not found");
 
             mark.SubjectId = string.IsNullOrEmpty(request.SubjectId) ? mark.SubjectId : request.SubjectId;
             mark.localId = string.IsNullOrEmpty(request.UserId) ? mark.localId : request.UserId;
@@ -77,25 +92,39 @@ namespace qlsv.Models.Services
             var result = await _context.SaveChangesAsync();
 
             if (result == 0)
-                throw new QLSVException("Update unsuccessfully");
+                return new ApiErrorResult<Marks>("Update Failed");
 
-            return mark;
+            return new ApiSuccessResult<Marks>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = mark
+            };
         }
 
-        public async Task<int> DeleteMark(string SubjectId, string UserId)
+        public async Task<ApiResult<bool>> DeleteMark(string SubjectId, string UserId)
         {
             var mark = await _context.Marks.FindAsync(SubjectId, UserId );
 
             if (mark == null)
-                throw new QLSVException("Mark not found");
+                return new ApiErrorResult<bool>("Mark not found");
 
             _context.Marks.Remove(mark);
 
-            return await _context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync();
+
+            if (result == 0)
+                return new ApiErrorResult<bool>("Delete Failed");
+
+            return new ApiSuccessResult<bool>()
+            {
+                IsSuccessed = true,
+                Message = "Success"
+            };
         }
         
 
-        public async Task<PageResult<MarkViewPaging>> GetPagingMark(PagingMarkRequest request)
+        public async Task<ApiResult<PageResult<MarkViewPaging>>> GetPagingMark(PagingMarkRequest request)
         {
             var query = from m in _context.Marks
                         join c in _context.Class on m.SubjectId equals c.ClassId into subIDClass
@@ -135,10 +164,15 @@ namespace qlsv.Models.Services
                 PageIndex = request.PageIndex,
                 Items = data
             };
-            return pagedResult;
+            return new ApiSuccessResult<PageResult<MarkViewPaging>>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = pagedResult
+            };
         }
 
-        public async Task<GPAView> GetGPA(string StudentID)
+        public async Task<ApiResult<GPAView>> GetGPA(string StudentID)
         {
             var query = from m in _context.Marks
                         join c in _context.Class on m.SubjectId equals c.ClassId
@@ -168,11 +202,16 @@ namespace qlsv.Models.Services
 
             //Caculate GPA
             GPA.GPA /= GPA.TotalCredit;
-            return GPA;
+            return new ApiSuccessResult<GPAView>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = GPA
+            };
         }
 
 
-        public async Task<MarkGPAView> GetTranscript(string StudentId)
+        public async Task<ApiResult<MarkGPAView>> GetTranscript(string StudentId)
         {
             var query = from m in _context.Marks
                         join u in _context.Users on m.localId equals u.LocalId
@@ -204,17 +243,22 @@ namespace qlsv.Models.Services
 
             var markView = await this.GetGPA(StudentId);
 
-            Data.GPA = markView.GPA;
-            Data.totalCredit = markView.TotalCredit;
+            Data.GPA = markView.ResultObj.GPA;
+            Data.totalCredit = markView.ResultObj.TotalCredit;
 
-            return Data;
+            return new ApiSuccessResult<MarkGPAView>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = Data
+            };
 
         }
 
         //<summary>
         //get mark in semester of year
         //</summary>
-        public async Task<List<MarkViewSemester>> GetMarkInSemester(MarkSemesterRequest request)
+        public async Task<ApiResult<List<MarkViewSemester>>> GetMarkInSemester(MarkSemesterRequest request)
         {
       
             var query = from c in _context.Class
@@ -233,7 +277,12 @@ namespace qlsv.Models.Services
             }).ToListAsync();
 
 
-            return data;
+            return new ApiSuccessResult<List<MarkViewSemester>>()
+            {
+                IsSuccessed = true,
+                Message = "Success",
+                ResultObj = data
+            };
         }
 
         //<summary>
@@ -241,10 +290,10 @@ namespace qlsv.Models.Services
         //</summary>
         public async Task<ApiResult<bool>> ExportTranscriptToPdf(string studentId)
         {
-            MarkGPAView data = await this.GetTranscript(studentId);
+            var tranScript = await this.GetTranscript(studentId);
+            var data = tranScript.ResultObj;
             string fileName = data.StudentId + ".pdf";
             //file name
-
 
             return await _exportService.ExportDataToPdf(fileName, data, "~/Assets/Client/Template/PdfExport.cshtml");
         }

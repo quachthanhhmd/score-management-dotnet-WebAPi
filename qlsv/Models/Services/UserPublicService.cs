@@ -248,7 +248,7 @@ namespace qlsv.Models.Services
 
             var result = await _markService.CreateMark(newMark);
 
-            if (result == 0)
+            if (!result.IsSuccessed)
                 return new ApiErrorResult<int>("Đăng ký thất bại, vui lòng thử lại sau.");
 
 

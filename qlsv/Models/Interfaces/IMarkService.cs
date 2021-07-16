@@ -13,22 +13,22 @@ namespace qlsv.Models.Interfaces
     public interface IMarkService
     {
 
-        Task<Marks> GetMark(string SubjectId, string UserId);
+        public Task<ApiResult<Marks>> GetMark(string SubjectId, string UserId);
 
-        Task<int> CreateMark(CreateMarkRequest request);
+        public Task<ApiResult<Marks>> CreateMark(CreateMarkRequest request);
         
-        Task<Marks> UpdateMark(string SubjectId, string UserId, UpdateMarkRequest request);
+        public Task<ApiResult<Marks>>  UpdateMark(string SubjectId, string UserId, UpdateMarkRequest request);
         
-        Task<int> DeleteMark(string SubjectId, string UserId);
+        public Task<ApiResult<bool> > DeleteMark(string SubjectId, string UserId);
 
-        Task<PageResult<MarkViewPaging>> GetPagingMark(PagingMarkRequest request);
+        public Task<ApiResult<PageResult<MarkViewPaging>>> GetPagingMark(PagingMarkRequest request);
 
-        Task<MarkGPAView> GetTranscript(string StudentId);
+        public Task<ApiResult<MarkGPAView>> GetTranscript(string StudentId);
         
-        Task<GPAView> GetGPA(string StudentID);
+        public Task<ApiResult<GPAView>> GetGPA(string StudentID);
 
-        Task<ApiResult<bool>> ExportTranscriptToPdf(string studentId);
+        public Task<ApiResult<bool>> ExportTranscriptToPdf(string studentId);
 
-        Task<List<MarkViewSemester>> GetMarkInSemester(MarkSemesterRequest request);
+        public Task<ApiResult<List<MarkViewSemester>>> GetMarkInSemester(MarkSemesterRequest request);
     }
 }
