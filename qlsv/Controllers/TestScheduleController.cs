@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using qlsv.Models.Interfaces;
+using qlsv.Utilities.Roles;
 using qlsv.ViewModels.Common;
 using qlsv.ViewModels.TestSchedule;
 using System;
@@ -12,7 +13,7 @@ namespace qlsv.Controllers
 {
     [Route("v1/[Controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = Roles.All)]
     public class TestScheduleController : ControllerBase
     {
         private readonly ITestScheduleService _testScheduleService;
@@ -25,8 +26,8 @@ namespace qlsv.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         [Route("{Id}")]
+
         public async Task<IActionResult> GetOne(int Id)
         {
             var result = await _testScheduleService.GetOne(Id);
@@ -40,8 +41,8 @@ namespace qlsv.Controllers
 
 
         [HttpPost]
-        [AllowAnonymous]
         [Route("create")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> CreateTestSchedule([FromForm]CreateTestScheduleRequest request)
         {
             var result = await _testScheduleService.CreateTestSchedule(request);
@@ -55,8 +56,8 @@ namespace qlsv.Controllers
 
 
         [HttpPut]
-        [AllowAnonymous]
         [Route("update/{Id}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> UpdateTestSchedule(int Id, [FromForm] UpdateTestScheduleRequest request)
         {
             var result = await _testScheduleService.UpdateTestSchedule(Id, request);
@@ -68,8 +69,8 @@ namespace qlsv.Controllers
         }
 
         [HttpDelete]
-        [AllowAnonymous]
         [Route("remove/{Id}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteTestSchedule(int Id)
         {
             var result = await _testScheduleService.RemoveTestSchedule(Id);
@@ -81,8 +82,8 @@ namespace qlsv.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [Route("export/xlxs")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> ExportTestScheduleToXLSX([FromQuery] SemesterInYearRequest request,[FromForm] string fileName,  [FromForm] TestScheduleExportBase inforExport)
         {
             if (!ModelState.IsValid)

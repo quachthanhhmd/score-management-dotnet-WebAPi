@@ -133,8 +133,9 @@ namespace qlsv.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         [Route("transcript/pdf/{Id}")]
+        [Authorize(Roles = Roles.Student)]
+        [Authorize(Roles = Roles.Admin)]
         //Only student with your Id and Admin can get transcripy of THIS student.
         public async Task<IActionResult> ExportTranscriptToPdf(string Id)
         {
