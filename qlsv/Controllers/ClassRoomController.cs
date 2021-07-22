@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using qlsv.Models.Interfaces;
+using qlsv.Utilities.Roles;
 using qlsv.ViewModels.ClassRoom;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace qlsv.Controllers
 {
     [Route("v1/[Controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = Roles.All)]
     public class ClassRoomController : Controller
     {
         private readonly IClassRoomService _classRoomService;
@@ -25,6 +26,7 @@ namespace qlsv.Controllers
 
         [HttpPost]
         [Route("create")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> CreateClassRoom([FromForm] CreateClassRoomRequest request)
         {
             if (!ModelState.IsValid)
@@ -40,6 +42,7 @@ namespace qlsv.Controllers
 
         [HttpPut]
         [Route("update/{Id}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> UpdateClassRoom(string Id, [FromForm] CreateClassRoomRequest request)
         {
             if (!ModelState.IsValid)
@@ -56,6 +59,7 @@ namespace qlsv.Controllers
 
         [HttpDelete]
         [Route("delete/{Id}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteClassRoomm(string Id)
         {
             if (!ModelState.IsValid)
@@ -100,6 +104,7 @@ namespace qlsv.Controllers
 
         [HttpDelete]
         [Route("delete/{Id}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteClassRoom(string Id)
         {
             if (!ModelState.IsValid)

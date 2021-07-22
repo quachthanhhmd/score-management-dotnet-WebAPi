@@ -35,7 +35,8 @@ namespace qlsv.Models.Services
             {
                 RoomId = request.RoomID,
                 Desks = request.Desks,
-                Seats = request.Seats
+                Seats = request.Seats,
+                Building = request.Building
             };
 
             await _context.AddAsync(newClassRoom);

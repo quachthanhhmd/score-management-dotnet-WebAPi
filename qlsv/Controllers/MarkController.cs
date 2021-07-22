@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using qlsv.Models.Interfaces;
+using qlsv.Utilities.Roles;
 using qlsv.ViewModels;
 using qlsv.ViewModels.Marks;
 using System;
@@ -12,7 +13,7 @@ namespace qlsv.Controllers
 {
     [Route("v1/[Controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = Roles.All)]
     public class MarkController : Controller
     {
         private readonly IMarkService _markService;
@@ -26,7 +27,7 @@ namespace qlsv.Controllers
 
         [HttpGet]
         [Route("{ClassId}/{UserId}")]
-        [AllowAnonymous]
+        
         public async Task<IActionResult> GetMark(string ClassId, string UserId)
         {
             if (!ModelState.IsValid)
@@ -39,7 +40,7 @@ namespace qlsv.Controllers
 
         [HttpGet]
         [Route("")]
-        [AllowAnonymous]
+        
         public async Task<IActionResult> GetPagingMark([FromQuery] PagingMarkRequest request)
         {
             if (!ModelState.IsValid)
@@ -52,7 +53,7 @@ namespace qlsv.Controllers
 
         [HttpPost]
         [Route("create")]
-        [AllowAnonymous]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> CreateMark([FromForm] CreateMarkRequest request)
         {
             if (!ModelState.IsValid)
@@ -68,7 +69,7 @@ namespace qlsv.Controllers
 
         [HttpPut]
         [Route("update/{ClassId}/{UserId}")]
-        [AllowAnonymous]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> UpdateMark(string ClassId, string UserId,[FromForm] UpdateMarkRequest request) 
         {
             if (!ModelState.IsValid)
@@ -83,6 +84,7 @@ namespace qlsv.Controllers
 
         [HttpDelete]
         [Route("delete/{ClassId}/{UserId}")]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> DeleteMark(string ClassId, string UserId)
         {
             if (!ModelState.IsValid)
@@ -96,9 +98,10 @@ namespace qlsv.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         [Route("transcript/{Id}")]
-        //Only student with your Id and Admin can get transcripy of THIS student.
+        //Only student with your Id and Admin can get transcript of THIS student.
+        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Roles.Student)]
         public async Task<IActionResult> GetTranscript(string Id)
         {
             if (!ModelState.IsValid)
@@ -113,8 +116,8 @@ namespace qlsv.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         [Route("gpa/{Id}")]
+        [Authorize(Roles = Roles.Student)]
         //Only student with your Id and Admin can get transcripy of THIS student.
         public async Task<IActionResult> GetGPA(string Id)
         {

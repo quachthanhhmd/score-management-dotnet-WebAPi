@@ -9,12 +9,13 @@ using Microsoft.AspNetCore.Authorization;
 using qlsv.ViewModels;
 using qlsv.ViewModels.Account;
 using qlsv.ViewModels.Users;
+using qlsv.Utilities.Roles;
 
 namespace qlsv.Controllers
 {
     [Route("v1/[Controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = Roles.All)]
     public class UsersController : ControllerBase
     {
 
@@ -78,6 +79,7 @@ namespace qlsv.Controllers
 
         [HttpDelete]
         [Route("delete/{Id}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteUser(Guid Id)
         {
 
@@ -100,7 +102,7 @@ namespace qlsv.Controllers
 
         [HttpGet]
         [Route("")]
-        [AllowAnonymous]
+     
         public async Task<IActionResult> GetPagingUser([FromQuery] UserPagingRequest request)
         {
             if (!ModelState.IsValid)
@@ -116,6 +118,7 @@ namespace qlsv.Controllers
 
         [HttpPost]
         [Route("Enroll/{Id}/{ClassId}")]
+        [Authorize(Roles = Roles.Student)]
         public async Task<IActionResult> EnrollClass(Guid Id, string ClassId)
         {
             var result = await _userPublicService.EnrollClass(Id, ClassId);
@@ -157,7 +160,7 @@ namespace qlsv.Controllers
 
         [HttpPost]
         [Route("assignrole/{Id}")]
-        [AllowAnonymous]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> AssignRole(Guid Id, [FromForm] Guid IdRole)
         {
             if (!ModelState.IsValid)

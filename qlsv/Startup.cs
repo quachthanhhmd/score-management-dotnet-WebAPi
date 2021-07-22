@@ -19,6 +19,8 @@ using qlsv.Models.Services;
 using qlsv.Models;
 using Microsoft.AspNetCore.Identity;
 using qlsv.Data.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace qlsv
 {
@@ -61,10 +63,10 @@ namespace qlsv
             services.AddTransient<IExportService, ExportService>();
             services.AddTransient<ITestScheduleService, TestScheduleService>();
             services.AddTransient<IRoleService, RoleService>();
-            
 
 
 
+      
 
             services.AddControllersWithViews();
             services.AddRazorPages();

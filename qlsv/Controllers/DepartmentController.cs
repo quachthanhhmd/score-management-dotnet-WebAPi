@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using qlsv.Models.Interfaces;
+using qlsv.Utilities.Roles;
 using qlsv.ViewModels.Departments;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace qlsv.Controllers
 {
     [Route("v1/[Controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = Roles.All)]
     public class DepartmentController : ControllerBase
     {
         private readonly IDepartmentService _departmentService;
@@ -55,6 +56,7 @@ namespace qlsv.Controllers
 
         [HttpPost]
         [Route("create")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> CreateDepartment([FromForm] CreateDepartmentRequest request)
         {
             if (!ModelState.IsValid)
@@ -70,6 +72,7 @@ namespace qlsv.Controllers
 
         [HttpPut]
         [Route("update/{Id}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> UpdateDepartment(string Id, [FromForm]UpdateDepartmentRequest request)
         {
             if (!ModelState.IsValid)
@@ -85,6 +88,7 @@ namespace qlsv.Controllers
 
         [HttpDelete]
         [Route("delete/{Id}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteDepartment(string Id)
         {
             if (!ModelState.IsValid)
