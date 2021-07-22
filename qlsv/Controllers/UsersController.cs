@@ -59,6 +59,20 @@ namespace qlsv.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        [Route("logout")]
+        public async Task<IActionResult> Logout()
+        {
+
+            var result = await _userPublicService.LogOut();
+
+            if (!result.IsSuccessed)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+
         [HttpPut]
         [Route("update/{Id}")]
         public async Task<IActionResult> UpdateUser(Guid Id, [FromForm] UpdateRequest request)

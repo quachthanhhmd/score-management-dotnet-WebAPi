@@ -21,8 +21,7 @@ using qlsv.ViewModels.Account;
 using qlsv.ViewModels.Users;
 using eShopSolution.ViewModels.Common;
 using qlsv.Data.Models;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
 
 namespace qlsv.Models.Services
 {
@@ -388,6 +387,18 @@ namespace qlsv.Models.Services
                 await _userManager.AddToRoleAsync(user, role.Name);
 
             
+
+            return new ApiSuccessResult<bool>()
+            {
+                IsSuccessed = true,
+                Message = "Success"
+            };
+        }
+
+        public async Task<ApiResult<bool>> LogOut()
+        {
+            
+            await _signInUser.SignOutAsync();
 
             return new ApiSuccessResult<bool>()
             {
