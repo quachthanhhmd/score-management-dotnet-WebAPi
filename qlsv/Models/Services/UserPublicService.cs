@@ -21,6 +21,8 @@ using qlsv.ViewModels.Account;
 using qlsv.ViewModels.Users;
 using eShopSolution.ViewModels.Common;
 using qlsv.Data.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace qlsv.Models.Services
 {
@@ -318,11 +320,19 @@ namespace qlsv.Models.Services
         public async  Task<ApiResult<PageResult<UserPagingView>>> GetPaging(UserPagingRequest request)
         {
             var query = from u in _context.Users
-                        select new { u };
+                        join ur in _context.UserRoles on u.Id equals ur.UserId
+                        join r in _context.AppRole on ur.RoleId equals r.Id
+                        select new { u, ur, r  };
 
-            query = query.Where(x => x.u.Name.Contains(request.Keyword)
-                                || x.u.Email.Contains(request.Keyword)
-                                || x.u.LocalId.Contains(request.Keyword));
+            if (!string.IsNullOrEmpty(request.Keyword))
+                query = query.Where(x => x.u.Name.Contains(request.Keyword)
+                                    || x.u.Email.Contains(request.Keyword)
+                                    || x.u.LocalId.Contains(request.Keyword));
+            if (!string.IsNullOrEmpty(request.RoleName)) 
+            {
+                query = query.Where(x => x.r.Name == request.RoleName);
+            }
+               
 
             int totalRow = await query.CountAsync();
 
@@ -369,8 +379,15 @@ namespace qlsv.Models.Services
             if (role == null)
                 return new ApiErrorResult<bool>("Role not found");
 
+            //remove exist role of user. 
+
+            await _userManager.RemoveFromRoleAsync(user, role.Name);
+
+            //add role
             if (await _userManager.IsInRoleAsync(user, role.Name) == false)
                 await _userManager.AddToRoleAsync(user, role.Name);
+
+            
 
             return new ApiSuccessResult<bool>()
             {

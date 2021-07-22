@@ -50,10 +50,11 @@ namespace qlsv.Controllers
                 return BadRequest(ModelState);
             var result = await _userPublicService.Authencate(request);
 
-            if (!string.IsNullOrEmpty(result.ResultObj))
+            if (!result.IsSuccessed)
             {
                 return BadRequest(result);
             }
+
             return Ok(result);
         }
 
@@ -99,6 +100,7 @@ namespace qlsv.Controllers
 
         [HttpGet]
         [Route("")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetPagingUser([FromQuery] UserPagingRequest request)
         {
             if (!ModelState.IsValid)

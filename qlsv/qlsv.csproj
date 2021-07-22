@@ -8,6 +8,7 @@
     <PackageReference Include="Blazorise.Bootstrap" Version="0.9.3.10" />
     <PackageReference Include="EPPlus" Version="5.7.1" />
     <PackageReference Include="IronPdf" Version="2021.3.1" />
+    <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.7">

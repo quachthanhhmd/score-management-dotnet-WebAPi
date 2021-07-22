@@ -115,6 +115,8 @@ namespace qlsv.Data
   
         public DbSet<Marks> Marks { get; set; }
         public DbSet<TestSchedule> TestSchedule { get; set; }
+        public DbSet<AppRole> AppRole { get; set; }
+    
     }
 
 }

@@ -9,6 +9,7 @@ namespace qlsv.ViewModels.Users
     public class UserPagingRequest : PagingBase
     {
         public string Keyword { set; get; }
+        public string RoleName { set; get; }
 
     }
 }
