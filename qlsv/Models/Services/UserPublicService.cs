@@ -20,6 +20,7 @@ using System.IO;
 using qlsv.ViewModels.Account;
 using qlsv.ViewModels.Users;
 using eShopSolution.ViewModels.Common;
+using qlsv.Data.Models;
 
 namespace qlsv.Models.Services
 {
@@ -29,6 +30,7 @@ namespace qlsv.Models.Services
         private readonly ApplicationDbContext _context;
         private readonly UserManager<Users> _userManager;
         private readonly SignInManager<Users> _signInUser;
+        private readonly RoleManager<AppRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IMarkService _markService;
@@ -39,6 +41,7 @@ namespace qlsv.Models.Services
         public UserPublicService(
             UserManager<Users> userManager,
             SignInManager<Users> SignInUser,
+            RoleManager<AppRole> roleManager,
             IConfiguration configuration,
             IWebHostEnvironment hostingEnvironment,
             ApplicationDbContext context,
@@ -50,6 +53,7 @@ namespace qlsv.Models.Services
         {
             _userManager = userManager;
             _signInUser = SignInUser;
+            _roleManager = roleManager;
             _configuration = configuration;
             _hostingEnvironment = hostingEnvironment;
             _context = context;
@@ -348,6 +352,28 @@ namespace qlsv.Models.Services
                 IsSuccessed = true,
                 Message = "Success",
                 ResultObj = pagedResult
+            };
+        }
+
+        public async Task<ApiResult<bool>> AssignRole(Guid Id, Guid IdRole)
+        {
+            var user = await _userManager.FindByIdAsync(Id.ToString());
+
+            if (user == null)
+                return new ApiErrorResult<bool>("User not found");
+
+            var role = await _roleManager.FindByIdAsync(Id.ToString());
+
+            if (role == null)
+                return new ApiErrorResult<bool>("Role not found");
+
+            if (await _userManager.IsInRoleAsync(user, role.Name) == false)
+                await _userManager.AddToRoleAsync(user, role.Name);
+
+            return new ApiSuccessResult<bool>()
+            {
+                IsSuccessed = true,
+                Message = "Success"
             };
         }
     }

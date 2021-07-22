@@ -10,8 +10,8 @@ using qlsv.Data;
 namespace qlsv.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210712053055_Initial")]
-    partial class Initial
+    [Migration("20210722035027_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -130,7 +130,9 @@ namespace qlsv.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)

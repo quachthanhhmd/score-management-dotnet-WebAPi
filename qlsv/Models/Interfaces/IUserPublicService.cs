@@ -24,5 +24,7 @@ namespace qlsv.Models.Interfaces
         Task<ApiResult<bool>> CheckTokenRecoveryPassword(Guid Id, string token, ResetPasswordRequest request);
         Task<ApiResult<PageResult<UserPagingView>>> GetPaging(UserPagingRequest request);
 
+        Task<ApiResult<bool>> AssignRole(Guid Id, Guid IdRole);
+
     }
 }

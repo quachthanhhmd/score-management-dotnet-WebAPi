@@ -60,6 +60,7 @@ namespace qlsv
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IExportService, ExportService>();
             services.AddTransient<ITestScheduleService, TestScheduleService>();
+            services.AddTransient<IRoleService, RoleService>();
             
 
 

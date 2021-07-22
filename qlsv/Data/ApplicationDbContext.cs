@@ -45,6 +45,8 @@ namespace qlsv.Data
             modelBuilder.Entity<Class>().HasIndex(u =>  u.RoomId);
 
             // Configure columns  
+            modelBuilder.Entity<AppRole>().Property(ug => ug.Description).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
+
             modelBuilder.Entity<Users>().Property(ug => ug.LocalId).HasColumnType("nvarchar(20)").HasMaxLength(20).IsRequired();
             modelBuilder.Entity<Users>().Property(ug => ug.Name).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
             modelBuilder.Entity<Users>().Property(ug => ug.Age).HasColumnType("int").IsRequired();
