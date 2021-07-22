@@ -46,7 +46,7 @@ namespace qlsv.Controllers
         {
 
             var result = await _roleService.GetAll();
-
+            
             if (result.IsSuccessed)
                 return BadRequest(result);
 

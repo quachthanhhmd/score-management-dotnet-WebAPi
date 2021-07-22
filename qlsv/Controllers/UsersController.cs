@@ -152,5 +152,21 @@ namespace qlsv.Controllers
 
             return BadRequest(result.Message);
         }
+
+        [HttpPost]
+        [Route("assignrole/{Id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AssignRole(Guid Id, [FromForm] Guid IdRole)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _userPublicService.AssignRole(Id, IdRole);
+
+            if (!result.IsSuccessed)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
     }
 }

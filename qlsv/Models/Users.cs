@@ -16,7 +16,6 @@ namespace qlsv.Models
         public string PhotoPath { set; get; }
         public string Address { set; get; }
         public Genders Gender { set; get; }
-        public Roles Role { set; get; }
         
     }
 }

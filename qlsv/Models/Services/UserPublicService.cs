@@ -155,6 +155,8 @@ namespace qlsv.Models.Services
             
             var result = await _userManager.CreateAsync(newUser, request.Password);
 
+            //Default role is a student
+            await _userManager.AddToRoleAsync(newUser, "Student");
             if (result.Succeeded)
             {
                 return new ApiSuccessResult<bool>();
@@ -362,7 +364,7 @@ namespace qlsv.Models.Services
             if (user == null)
                 return new ApiErrorResult<bool>("User not found");
 
-            var role = await _roleManager.FindByIdAsync(Id.ToString());
+            var role = await _roleManager.FindByIdAsync(IdRole.ToString());
 
             if (role == null)
                 return new ApiErrorResult<bool>("Role not found");

@@ -53,7 +53,6 @@ namespace qlsv.Data
             modelBuilder.Entity<Users>().Property(ug => ug.Address).HasColumnType("nvarchar(100)").HasMaxLength(100).IsRequired();
             modelBuilder.Entity<Users>().Property(ug => ug.Gender).HasColumnType("int").IsRequired(true);
             modelBuilder.Entity<Users>().Property(ug => ug.Dob).HasColumnType("DATE").IsRequired(true);
-            modelBuilder.Entity<Users>().Property(ug => ug.Role).HasColumnType("int").IsRequired(true);
             modelBuilder.Entity<Users>().Property(ug => ug.PhotoPath).HasColumnType("nvarchar(100").HasMaxLength(100);
                 
 
