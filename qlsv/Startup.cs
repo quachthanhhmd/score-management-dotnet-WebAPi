@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Identity;
 using qlsv.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using qlsv.Middleware;
 
 namespace qlsv
 {
@@ -41,7 +42,7 @@ namespace qlsv
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            
+             
 
             var connectionString = _configuration.GetConnectionString("Default");
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -122,10 +123,11 @@ namespace qlsv
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication();
+           
             app.UseRouting();
 
             app.UseAuthorization();
@@ -137,7 +139,7 @@ namespace qlsv
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger qlsv V1");
                 c.RoutePrefix = string.Empty;
             });
-
+            app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
